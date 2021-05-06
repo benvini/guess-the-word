@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components/native';
 import { Screen } from './ts/shared/components/common';
 import { Typography } from './ts/shared/components';
 import { loadTheme } from './ts/shared/theme';
+import StartGameScreen from './ts/screens/StartGameScreen';
 
 const App = () => {
   const colorScheme = useColorScheme();
@@ -11,9 +12,10 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Screen>
+      {/* <Screen>
         <Typography>Guess The Word</Typography>
-      </Screen>
+      </Screen> */}
+      <StartGameScreen/>
     </ThemeProvider>
   );
 };
