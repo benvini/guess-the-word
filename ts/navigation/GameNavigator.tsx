@@ -1,0 +1,61 @@
+import React from 'react';
+import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack';
+import { Platform } from 'react-native';
+import COLOR from '../styles/Color';
+
+import { StartGameScreen } from '../screens/StartGameScreen';
+import { GamePlayScreen } from '../screens/GamePlayScreen';
+import { GameOverScreen } from '../screens/GameOverScreen';
+
+const defaultNavOptions: StackNavigationOptions = {
+    headerStyle: {
+        backgroundColor: Platform.OS === 'android' ? COLOR.PRIMARY : 'white'
+    },
+    headerTintColor: Platform.OS === 'android' ? 'white' : COLOR.PRIMARY,
+    headerTitleStyle: {
+        alignSelf: 'center'
+    }
+};
+
+const opacityTransition: object = { // animation on navigate the screens
+    gestureDirection: 'horizontal',
+    transitionSpec: {
+        open: {
+            animation: 'timing',
+        },
+        close: {
+            animation: 'timing',
+            config: {
+                duration: 600,
+            },
+        },
+    },
+    cardStyleInterpolator: ({ current }: { current: { progress: number } }) => ({
+        cardStyle: {
+            opacity: current.progress,
+        },
+    }),
+};
+
+const GameStackNavigator = createStackNavigator();
+
+const GameNavigator = () => {
+    return (
+        <GameStackNavigator.Navigator screenOptions={{ ...defaultNavOptions, ...opacityTransition }}>
+            <GameStackNavigator.Screen
+                name="StartGame"
+                component={StartGameScreen}
+            />
+            <GameStackNavigator.Screen
+                name="GamePlay"
+                component={GamePlayScreen}
+            />
+            <GameStackNavigator.Screen
+                name="GameOver"
+                component={GameOverScreen}
+            />
+        </GameStackNavigator.Navigator>
+    )
+}
+
+export default GameNavigator;
