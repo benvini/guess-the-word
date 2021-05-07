@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components/native';
 import { Screen, Typography } from '../../shared/components';
+import MainButton from '../../shared/components/MainButton';
 
-const Button = styled.TouchableOpacity`
-    padding: 8px;
-    border-radius: 4px;
+const TitleContainer = styled.View`
+    margin-top: 8px;
 `;
 
 const ButtonsContainer = styled.View`
@@ -15,10 +15,12 @@ const ButtonsContainer = styled.View`
 const StartGameScreen: FunctionComponent = () => {
     return (
         <Screen>
-            <Typography>Welcome to the Guess the word game!</Typography>
+            <TitleContainer>
+                <Typography>Welcome to the Guess the word game!</Typography>
+            </TitleContainer>
             <ButtonsContainer>
-            <Button><Typography>Start Game</Typography></Button>
-            <Button><Typography>Leaderboards</Typography></Button>
+                <MainButton onPress={() => { }} title="Start Game"/>
+                <MainButton onPress={() => { }} title="Leaderboards" />
             </ButtonsContainer>
             <Typography>Your high score:</Typography>
         </Screen>

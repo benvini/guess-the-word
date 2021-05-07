@@ -43,15 +43,15 @@ const GameNavigator = () => {
     return (
         <GameStackNavigator.Navigator screenOptions={{ ...defaultNavOptions, ...opacityTransition }}>
             <GameStackNavigator.Screen
-                name="StartGame"
+                name="Welcome"
                 component={StartGameScreen}
             />
             <GameStackNavigator.Screen
-                name="GamePlay"
+                name="Game Play"
                 component={GamePlayScreen}
             />
             <GameStackNavigator.Screen
-                name="GameOver"
+                name="Game Over"
                 component={GameOverScreen}
             />
         </GameStackNavigator.Navigator>
