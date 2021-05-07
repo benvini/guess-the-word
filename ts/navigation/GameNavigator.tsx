@@ -6,6 +6,7 @@ import COLOR from '../styles/Color';
 import { StartGameScreen } from '../screens/StartGameScreen';
 import { GamePlayScreen } from '../screens/GamePlayScreen';
 import { GameOverScreen } from '../screens/GameOverScreen';
+import { LeaderboardsScreen } from '../screens/LeaderboardsScreen';
 
 const defaultNavOptions: StackNavigationOptions = {
     headerStyle: {
@@ -53,6 +54,10 @@ const GameNavigator = () => {
             <GameStackNavigator.Screen
                 name="Game Over"
                 component={GameOverScreen}
+            />
+            <GameStackNavigator.Screen
+                name="Leaderboards"
+                component={LeaderboardsScreen}
             />
         </GameStackNavigator.Navigator>
     )
