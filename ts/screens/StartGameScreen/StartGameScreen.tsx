@@ -32,7 +32,7 @@ const StartGameScreen: FunctionComponent<Props> = (props) => {
             </TitleContainer>
             <ButtonsContainer>
                 <MainButton onPress={onStartGame} title="Start Game"/>
-                <MainButton onPress={onLeaderboards} title="Leaderboards" />
+                <MainButton onPress={onLeaderboards} title="Leaderboards" style={{ width: 140 }}/>
             </ButtonsContainer>
             <Typography>Your high score:</Typography>
         </Screen>

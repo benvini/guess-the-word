@@ -19,7 +19,7 @@ const defaultNavOptions: StackNavigationOptions = {
     headerTitleContainerStyle: {
         left: 0
     },
-    
+    headerBackTitle: ''
 };
 
 const opacityTransition: object = { // animation on navigate the screens
