@@ -10,9 +10,9 @@ import { LeaderboardsScreen } from '../screens/LeaderboardsScreen';
 
 const defaultNavOptions: StackNavigationOptions = {
     headerStyle: {
-        backgroundColor: Platform.OS === 'android' ? COLOR.PRIMARY : 'white'
+        backgroundColor: COLOR.PRIMARY
     },
-    headerTintColor: Platform.OS === 'android' ? 'white' : COLOR.PRIMARY,
+    headerTintColor: 'white',
     headerTitleStyle: {
         alignSelf: 'center'
     },
