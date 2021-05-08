@@ -1,21 +1,24 @@
-import React, {FunctionComponent} from 'react';
+import React, { FunctionComponent } from 'react';
 import styled from 'styled-components/native';
 
 type Props = {
-    fontWeight?: React.CSSProperties,
-    fontSize?: React.CSSProperties,
+  style?: object,
+  children: React.ReactNode
 };
 
-const Container = styled.Text`
+const Container = styled.View``
+const StyledText = styled.Text`
   font-size: 16px;
-  ${(props: Props) => props.fontWeight && `font-weight: ${props.fontWeight}`};
-  ${(props: Props) => props.fontSize && `font-size: ${props.fontSize}`};
   color: black;
 `
 
-const Typography: FunctionComponent<Props> = (props) => {
+const Typography: FunctionComponent<Props> = ({ style, children }: Props) => {
   return (
-    <Container {...props}/>
+    <Container style={{ ...style }}>
+      <StyledText>
+        {children}
+      </StyledText>
+    </Container>
   );
 };
 

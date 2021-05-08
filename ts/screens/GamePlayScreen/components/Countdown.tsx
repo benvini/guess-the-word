@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 
 type Props = {
     time: number,
-    style: object
+    style?: object
 }
 
 const Container = styled.View`
