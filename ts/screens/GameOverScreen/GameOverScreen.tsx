@@ -1,5 +1,6 @@
 import React, {FunctionComponent} from 'react';
 import styled from 'styled-components/native';
+
 import {Screen, Typography} from '../../shared/components';
 
 const Button = styled.TouchableOpacity`

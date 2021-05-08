@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import styled from 'styled-components/native';
+
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 import Countdown from './components/Countdown';

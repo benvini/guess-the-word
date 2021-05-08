@@ -1,4 +1,5 @@
 import {Platform} from 'react-native';
+
 import light from './light';
 import dark from './dark';
 

@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import styled from 'styled-components/native';
+
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 

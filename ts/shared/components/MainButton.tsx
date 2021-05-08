@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
+
 import Typography from './Typography';
 import COLOR from '../../styles/Color';
 

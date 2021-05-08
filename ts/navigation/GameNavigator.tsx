@@ -1,8 +1,7 @@
 import React from 'react';
 import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack';
-import { Platform } from 'react-native';
-import COLOR from '../styles/Color';
 
+import COLOR from '../styles/Color';
 import { StartGameScreen } from '../screens/StartGameScreen';
 import { GamePlayScreen } from '../screens/GamePlayScreen';
 import { GameOverScreen } from '../screens/GameOverScreen';
