@@ -15,7 +15,11 @@ const defaultNavOptions: StackNavigationOptions = {
     headerTintColor: Platform.OS === 'android' ? 'white' : COLOR.PRIMARY,
     headerTitleStyle: {
         alignSelf: 'center'
-    }
+    },
+    headerTitleContainerStyle: {
+        left: 0
+    },
+    
 };
 
 const opacityTransition: object = { // animation on navigate the screens
