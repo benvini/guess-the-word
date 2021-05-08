@@ -16,6 +16,9 @@ const GamePlayScreen: FunctionComponent = () => {
                 clearInterval(timer);
             }
         }
+        return () => {
+            clearInterval(timer);
+        }
     }, []);
     return (
         <Screen>
