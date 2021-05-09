@@ -14,7 +14,7 @@ const GuessContainer = styled.View`
 
 const GamePlayScreen: FunctionComponent = () => {
     const [count, setCount] = useState(30);
-    const [difficulty, setDifficulty] = useState(DIFFICULTY.Easy);
+    const [difficulty, setDifficulty] = useState(DIFFICULTY.Hard);
     const [lifePoints, setLifePoints] = useState(3);
     const [visitedWords, setVisitedWords] = useState([]);
     const [generatedWord, setGeneratedWord] = useState('');
@@ -87,9 +87,9 @@ const wordLength = generatedWord.length;
     const renderWord = useCallback(() => {
         const content = transformedWord.split('').map((char, index) => {
             if (char === ' ') {
-                return (<Input key={index} style={{borderBottomWidth: 2}} value={char}/>);
+                return (<Input key={`${char} ${index}`} style={{borderBottomWidth: 2}}/>);
             }
-            return (<Input editable={false} value={char}/>)
+            return (<Input key={`${char} ${index}`} editable={false} value={char}/>)
         })
         return content;
     }, [transformedWord]);
