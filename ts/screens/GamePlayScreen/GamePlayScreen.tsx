@@ -37,10 +37,8 @@ const GamePlayScreen: FunctionComponent = () => {
     useEffect(() => {
         const generatedWord = getWordByDifficulty(difficulty);
         setGeneratedWord(generatedWord);
-console.log('generatedWord', generatedWord);
 const wordLength = generatedWord.length;
         const randomIndexes = wordLength < 5 ? getUniqueRandomIndexes(1, wordLength) : getUniqueRandomIndexes(2, wordLength);
-        console.log('randomIndexes', randomIndexes);
         const transformedWord = generatedWord.split('').map((char, index) => {
             if (randomIndexes.includes(index)) {
                 return ' ';
@@ -48,7 +46,6 @@ const wordLength = generatedWord.length;
             return char;
         }).join('');
         setTransformedWord(transformedWord);
-        console.log('transformedWord', transformedWord);
     }, []);
 
     const getWordByDifficulty = useCallback((difficulty: DIFFICULTY) => {
