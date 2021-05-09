@@ -86,7 +86,7 @@ const wordLength = generatedWord.length;
             if (char === ' ') {
                 return (<Input key={`${char} ${index}`} style={{borderBottomWidth: 2}}/>);
             }
-            return (<Input key={`${char} ${index}`} editable={false} value={char}/>)
+            return (<Input key={`${char} ${index}`} editable={false} value={char.toUpperCase()}/>)
         })
         return content;
     }, [transformedWord]);

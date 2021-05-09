@@ -20,14 +20,14 @@ const StyledInput = styled.TextInput`
 `
 
 const Input: FunctionComponent<Props> = ({ style, editable, value }: Props) => {
-    const [inputText, setInputText] = useState(value);
+    const [inputText, setInputText] = useState(value || '');
 
     const onChangeText = useCallback((text) => {        
         setInputText(text);
     }, []);
 
     return (
-        <StyledInput style={{ ...style }} editable={editable} value={inputText?.toUpperCase()} onChangeText={onChangeText} maxLength={1} />
+        <StyledInput style={{ ...style }} editable={editable} value={inputText} onChangeText={(text) => onChangeText(text.toUpperCase())} maxLength={1}/>
     )
 }
 
