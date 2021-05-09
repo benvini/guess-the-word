@@ -10,7 +10,6 @@ const TitleContainer = styled.View`
 
 const ButtonsContainer = styled.View`
     flex-direction: row;
-    justify-content: center;
 `
 
 type Props = {
