@@ -10,6 +10,7 @@ import {replaceChar} from '../../shared/utils/utils';
 
 const GuessContainer = styled.View`
     flex-direction: row;
+    margin-bottom: 12px;
 `
 
 const StyledInput = styled.TextInput`
@@ -24,13 +25,19 @@ const StyledInput = styled.TextInput`
     font-size: 18px;
 `
 
-const GamePlayScreen: FunctionComponent = () => {
+type Props = {
+    navigation: any;
+}
+
+const GamePlayScreen: FunctionComponent<Props> = ({navigation}: Props) => {
     const [count, setCount] = useState(30);
     const [difficulty, setDifficulty] = useState(DIFFICULTY.Hard);
     const [lifePoints, setLifePoints] = useState(3);
+    const [score, setScore] = useState(3);
     const [visitedWords, setVisitedWords] = useState([]);
     const [generatedWord, setGeneratedWord] = useState('');
     const [transformedWord, setTransformedWord] = useState('');
+    const [errorLabel, setErrorLabel] = useState(false);
 
     const onTextChanges = useCallback((text, index) => {        
         setTransformedWord(transformedWord => replaceChar(transformedWord, text, index));
@@ -44,6 +51,7 @@ const GamePlayScreen: FunctionComponent = () => {
         if (count === 0) {
             return () => {
                 clearInterval(timer);
+                setLifePoints(lifePoints => lifePoints - 1);
             }
         }
         return () => {
@@ -63,6 +71,12 @@ const wordLength = generatedWord.length;
         }).join('');
         setTransformedWord(transformedWord);
     }, []);
+
+    useEffect(() => {
+        if (lifePoints === 0) {
+            navigation.navigate('Game Over');
+        }
+    }, [lifePoints]);
 
     const getWordByDifficulty = useCallback((difficulty: DIFFICULTY) => {
         const {Easy, Intermediate, Hard, WorldClass} = DIFFICULTY;
@@ -107,13 +121,30 @@ const wordLength = generatedWord.length;
         return content;
     }, [transformedWord]);
 
+    const onGuess = useCallback(() => {       
+        if (transformedWord.trim().length === generatedWord.length) {            
+            setErrorLabel(false);
+            if (transformedWord === generatedWord) {
+                setScore(score => score + 1);
+            }
+            else {
+                setLifePoints(lifePoints => lifePoints - 1);
+            }
+        }
+        else {
+            setErrorLabel(true);
+        }
+    }, [transformedWord, generatedWord]);
+
     return (
         <Screen>
             <Typography>Difficulty: {difficulty}</Typography>
             <Typography>Life Points: {lifePoints}</Typography>
+            <Typography>Score: {score}</Typography>
             <Countdown time={count} style={{ marginTop: 12 }} />
             <GuessContainer>{renderWord()}</GuessContainer>
-            <MainButton title="Check The Guess" style={{ width: 160 }} />
+            {errorLabel && <Typography>Please fill all characters</Typography>}
+            <MainButton title="Check The Guess" style={{ width: 160 }} onPress={onGuess}/>
         </Screen>
     )
 };
