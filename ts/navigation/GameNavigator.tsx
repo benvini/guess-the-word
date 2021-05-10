@@ -47,7 +47,7 @@ const GameNavigator = () => {
     return (
         <GameStackNavigator.Navigator screenOptions={{ ...defaultNavOptions, ...opacityTransition }}>
             <GameStackNavigator.Screen
-                name="Welcome"
+                name="Main Menu"
                 component={StartGameScreen}
             />
             <GameStackNavigator.Screen

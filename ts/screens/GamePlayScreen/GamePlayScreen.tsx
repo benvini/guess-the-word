@@ -53,6 +53,7 @@ const GamePlayScreen: FunctionComponent = () => {
                 setSeconds(5);
             }
             else {
+                cleanupGameConfig();
                 navigation.navigate('Game Over', { score });
             }
         }
@@ -68,9 +69,11 @@ const GamePlayScreen: FunctionComponent = () => {
 
     useEffect(() => {
         if (lifePoints === 0) {
+            cleanupGameConfig();
             navigation.navigate('Game Over', { score });
         }
         else {
+            setErrorLabel(false);
             generateNewWord();
         }
     }, [lifePoints, difficulty, score]);
@@ -88,6 +91,14 @@ const GamePlayScreen: FunctionComponent = () => {
         }).join('');
         setTransformedWord(transformedWord);
     }, [difficulty]);
+
+    const cleanupGameConfig = useCallback(() => {
+        setSeconds(5);
+        setDifficulty(DIFFICULTY.Easy)
+        setLifePoints(3);
+        setScore(0);
+        setErrorLabel(false);
+    }, []);
 
     const startCountdown = useCallback(() => {
         const timer = setInterval(() => {
