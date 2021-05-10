@@ -14,8 +14,8 @@ const StyledText = styled.Text`
 
 const Typography: FunctionComponent<Props> = ({ style, children }: Props) => {
   return (
-    <Container style={{ ...style }}>
-      <StyledText>
+    <Container>
+      <StyledText style={{ ...style }}>
         {children}
       </StyledText>
     </Container>

@@ -6,8 +6,9 @@ const words = require('../../../vocabulary.json');
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 import Countdown from './components/Countdown';
-import {DIFFICULTY} from '../../shared/constants/contants';
-import {replaceChar} from '../../shared/utils/utils';
+import { DIFFICULTY } from '../../shared/constants/contants';
+import { replaceChar } from '../../shared/utils/utils';
+import COLOR from '../../styles/Color';
 
 const GuessContainer = styled.View`
     flex-direction: row;
@@ -37,7 +38,7 @@ const GamePlayScreen: FunctionComponent = () => {
     const [errorLabel, setErrorLabel] = useState(false);
     const navigation = useNavigation();
 
-    const onTextChanges = useCallback((text, index) => {        
+    const onTextChanges = useCallback((text, index) => {
         setTransformedWord(transformedWord => replaceChar(transformedWord, text, index));
     }, []);
 
@@ -59,7 +60,7 @@ const GamePlayScreen: FunctionComponent = () => {
     useEffect(() => {
         const generatedWord = getWordByDifficulty(difficulty);
         setGeneratedWord(generatedWord);
-const wordLength = generatedWord.length;
+        const wordLength = generatedWord.length;
         const randomIndexes = wordLength < 5 ? getUniqueRandomIndexes(1, wordLength) : getUniqueRandomIndexes(2, wordLength);
         const transformedWord = generatedWord.split('').map((char, index) => {
             if (randomIndexes.includes(index)) {
@@ -77,23 +78,23 @@ const wordLength = generatedWord.length;
     }, [lifePoints]);
 
     const getWordByDifficulty = useCallback((difficulty: DIFFICULTY) => {
-        const {Easy, Intermediate, Hard, WorldClass} = DIFFICULTY;
+        const { Easy, Intermediate, Hard, WorldClass } = DIFFICULTY;
         let generatedWord = '';
-        switch(difficulty) {
+        switch (difficulty) {
             case Easy:
                 generatedWord = words[0].easy[Math.floor(Math.random() * words[0].easy.length)];
-            break;
+                break;
             case Intermediate:
                 generatedWord = words[1].intermediate[Math.floor(Math.random() * words[1].intermediate.length)];
-            break;
+                break;
             case Hard:
                 generatedWord = words[2].hard[Math.floor(Math.random() * words[2].hard.length)];
-            break;
+                break;
             case WorldClass:
                 generatedWord = words[3].worldClass[Math.floor(Math.random() * words[3].worldClass.length)];
-            break;
-            default: 
-            break;
+                break;
+            default:
+                break;
         }
         return generatedWord;
     }, []);
@@ -101,9 +102,9 @@ const wordLength = generatedWord.length;
     const getUniqueRandomIndexes = useCallback((amount: number, wordLength: number) => {
         let randomIndexes = [];
 
-        while(randomIndexes.length < amount) {
+        while (randomIndexes.length < amount) {
             const randIndex = Math.floor(Math.random() * wordLength);
-            if(randomIndexes.indexOf(randIndex) === -1) randomIndexes.push(randIndex);
+            if (randomIndexes.indexOf(randIndex) === -1) randomIndexes.push(randIndex);
         }
 
         return randomIndexes;
@@ -112,15 +113,15 @@ const wordLength = generatedWord.length;
     const renderWord = useCallback(() => {
         const content = transformedWord.split('').map((char, index) => {
             if (char === ' ') {
-                return (<StyledInput key={index} style={{borderBottomWidth: 2}} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1}/>);
+                return (<StyledInput key={index} style={{ borderBottomWidth: 2 }} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} />);
             }
-            return (<StyledInput key={index} editable={false} value={char.toUpperCase()} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1}/>);
+            return (<StyledInput key={index} editable={false} value={char.toUpperCase()} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} />);
         });
         return content;
     }, [transformedWord]);
 
-    const onGuess = useCallback(() => {       
-        if (transformedWord.trim().length === generatedWord.length) {            
+    const onGuess = useCallback(() => {
+        if (transformedWord.trim().length === generatedWord.length) {
             setErrorLabel(false);
             if (transformedWord === generatedWord) {
                 setScore(score => score + 1);
@@ -141,8 +142,8 @@ const wordLength = generatedWord.length;
             <Typography>Score: {score}</Typography>
             <Countdown time={count} style={{ marginTop: 12 }} />
             <GuessContainer>{renderWord()}</GuessContainer>
-            {errorLabel && <Typography>Please fill all characters</Typography>}
-            <MainButton title="Check The Guess" style={{ width: 160 }} onPress={onGuess}/>
+            {errorLabel && <Typography style={{ color: COLOR.ERROR }}>Please fill all characters</Typography>}
+            <MainButton title="Check The Guess" style={{ width: 160 }} onPress={onGuess} />
         </Screen>
     )
 };
