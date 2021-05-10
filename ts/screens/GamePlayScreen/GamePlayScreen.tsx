@@ -53,10 +53,10 @@ const GamePlayScreen: FunctionComponent = () => {
                 setSeconds(5);
             }
             else {
-                navigation.navigate('Game Over');
+                navigation.navigate('Game Over', { score });
             }
         }
-    }, [seconds]);
+    }, [seconds, score]);
 
     useEffect(() => {
         const timer = startCountdown();
@@ -68,12 +68,12 @@ const GamePlayScreen: FunctionComponent = () => {
 
     useEffect(() => {
         if (lifePoints === 0) {
-            navigation.navigate('Game Over');
+            navigation.navigate('Game Over', { score });
         }
         else {
             generateNewWord();
         }
-    }, [lifePoints, difficulty]);
+    }, [lifePoints, difficulty, score]);
 
     const generateNewWord = useCallback(() => {
         const generatedWord = getWordByDifficulty(difficulty);
