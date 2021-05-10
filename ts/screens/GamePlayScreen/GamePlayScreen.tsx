@@ -5,11 +5,23 @@ import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 import Countdown from './components/Countdown';
 import {DIFFICULTY} from '../../shared/constants/contants';
-import Input from '../../shared/components/Input';
 import styled from 'styled-components/native';
+import {replaceChar} from '../../shared/utils/utils';
 
 const GuessContainer = styled.View`
     flex-direction: row;
+`
+
+const StyledInput = styled.TextInput`
+    padding: 0px;
+    border-width: 0;
+    width: 36px;
+    margin-bottom: 8px;
+    margin-top: 16px;
+    margin-right: 6px;
+    color: black;
+    text-align: center;
+    font-size: 18px;
 `
 
 const GamePlayScreen: FunctionComponent = () => {
@@ -19,6 +31,10 @@ const GamePlayScreen: FunctionComponent = () => {
     const [visitedWords, setVisitedWords] = useState([]);
     const [generatedWord, setGeneratedWord] = useState('');
     const [transformedWord, setTransformedWord] = useState('');
+
+    const onTextChanges = useCallback((text, index) => {        
+        setTransformedWord(transformedWord => replaceChar(transformedWord, text, index));
+    }, []);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -84,10 +100,10 @@ const wordLength = generatedWord.length;
     const renderWord = useCallback(() => {
         const content = transformedWord.split('').map((char, index) => {
             if (char === ' ') {
-                return (<Input key={`${char} ${index}`} style={{borderBottomWidth: 2}}/>);
+                return (<StyledInput key={index} style={{borderBottomWidth: 2}} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1}/>);
             }
-            return (<Input key={`${char} ${index}`} editable={false} value={char.toUpperCase()}/>)
-        })
+            return (<StyledInput key={index} editable={false} value={char.toUpperCase()} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1}/>);
+        });
         return content;
     }, [transformedWord]);
 
