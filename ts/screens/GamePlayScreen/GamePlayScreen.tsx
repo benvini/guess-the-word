@@ -1,11 +1,12 @@
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import styled from 'styled-components/native';
 
 const words = require('../../../vocabulary.json');
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 import Countdown from './components/Countdown';
 import {DIFFICULTY} from '../../shared/constants/contants';
-import styled from 'styled-components/native';
 import {replaceChar} from '../../shared/utils/utils';
 
 const GuessContainer = styled.View`
@@ -25,11 +26,7 @@ const StyledInput = styled.TextInput`
     font-size: 18px;
 `
 
-type Props = {
-    navigation: any;
-}
-
-const GamePlayScreen: FunctionComponent<Props> = ({navigation}: Props) => {
+const GamePlayScreen: FunctionComponent = () => {
     const [count, setCount] = useState(30);
     const [difficulty, setDifficulty] = useState(DIFFICULTY.Hard);
     const [lifePoints, setLifePoints] = useState(3);
@@ -38,6 +35,7 @@ const GamePlayScreen: FunctionComponent<Props> = ({navigation}: Props) => {
     const [generatedWord, setGeneratedWord] = useState('');
     const [transformedWord, setTransformedWord] = useState('');
     const [errorLabel, setErrorLabel] = useState(false);
+    const navigation = useNavigation();
 
     const onTextChanges = useCallback((text, index) => {        
         setTransformedWord(transformedWord => replaceChar(transformedWord, text, index));

@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import styled from 'styled-components/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
@@ -12,13 +13,8 @@ const ButtonsContainer = styled.View`
     flex-direction: row;
 `
 
-type Props = {
-    navigation: any
-}
-
-const StartGameScreen: FunctionComponent<Props> = (props) => {
-    const {navigation} = props;
-
+const StartGameScreen: FunctionComponent = () => {
+    const navigation = useNavigation();
     const onStartGame = useCallback(() => {
         navigation.navigate('Game Play');
     }, []);
