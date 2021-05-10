@@ -57,6 +57,9 @@ const GameNavigator = () => {
             <GameStackNavigator.Screen
                 name="Game Over"
                 component={GameOverScreen}
+                options={() => ({
+                    headerLeft: () => null,
+                  })}
             />
             <GameStackNavigator.Screen
                 name="Leaderboards"
