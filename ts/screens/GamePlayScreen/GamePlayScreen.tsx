@@ -2,12 +2,11 @@ import React, { FunctionComponent, useCallback, useEffect, useState } from 'reac
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 
-const words = require('../../../vocabulary.json');
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 import Countdown from './components/Countdown';
 import { DIFFICULTY } from '../../shared/constants/contants';
-import { replaceChar } from '../../shared/utils/utils';
+import { replaceChar, getWordByDifficulty, getUniqueRandomIndexes } from '../../shared/utils/utils';
 import COLOR from '../../styles/Color';
 
 const GuessContainer = styled.View`
@@ -28,10 +27,10 @@ const StyledInput = styled.TextInput`
 `
 
 const GamePlayScreen: FunctionComponent = () => {
-    const [count, setCount] = useState(30);
-    const [difficulty, setDifficulty] = useState(DIFFICULTY.Hard);
+    const [seconds, setSeconds] = useState(5);
+    const [difficulty, setDifficulty] = useState(DIFFICULTY.Easy);
     const [lifePoints, setLifePoints] = useState(3);
-    const [score, setScore] = useState(3);
+    const [score, setScore] = useState(0);
     const [visitedWords, setVisitedWords] = useState([]);
     const [generatedWord, setGeneratedWord] = useState('');
     const [transformedWord, setTransformedWord] = useState('');
@@ -43,21 +42,40 @@ const GamePlayScreen: FunctionComponent = () => {
     }, []);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCount(prevCount => prevCount - 1 >= 0 ? prevCount - 1 : 0);
-        }, 1000);
+        generateNewWord();
+    }, []);
 
-        if (count === 0) {
-            return () => {
-                clearInterval(timer);
-                setLifePoints(lifePoints => lifePoints - 1);
+    useEffect(() => {
+        if (seconds === 0) {
+            const nextLevel = getNextDifficulty();
+            if (nextLevel !== DIFFICULTY.Easy) {
+                setDifficulty(nextLevel);
+                setSeconds(5);
+            }
+            else {
+                navigation.navigate('Game Over');
             }
         }
+    }, [seconds]);
+
+    useEffect(() => {
+        const timer = startCountdown();
+
         return () => {
             clearInterval(timer);
         }
-    }, []);
+    }, [difficulty]);
+
     useEffect(() => {
+        if (lifePoints === 0) {
+            navigation.navigate('Game Over');
+        }
+        else {
+            generateNewWord();
+        }
+    }, [lifePoints, difficulty]);
+
+    const generateNewWord = useCallback(() => {
         const generatedWord = getWordByDifficulty(difficulty);
         setGeneratedWord(generatedWord);
         const wordLength = generatedWord.length;
@@ -69,46 +87,34 @@ const GamePlayScreen: FunctionComponent = () => {
             return char;
         }).join('');
         setTransformedWord(transformedWord);
+    }, [difficulty]);
+
+    const startCountdown = useCallback(() => {
+        const timer = setInterval(() => {
+            setSeconds(prevSeconds => prevSeconds - 1 >= 0 ? prevSeconds - 1 : 0);
+        }, 1000);
+        return timer;
     }, []);
 
-    useEffect(() => {
-        if (lifePoints === 0) {
-            navigation.navigate('Game Over');
-        }
-    }, [lifePoints]);
+    const getNextDifficulty = useCallback(() => {
+        let nextLevel = DIFFICULTY.Easy;
 
-    const getWordByDifficulty = useCallback((difficulty: DIFFICULTY) => {
-        const { Easy, Intermediate, Hard, WorldClass } = DIFFICULTY;
-        let generatedWord = '';
         switch (difficulty) {
-            case Easy:
-                generatedWord = words[0].easy[Math.floor(Math.random() * words[0].easy.length)];
+            case DIFFICULTY.Easy:
+                nextLevel = DIFFICULTY.Intermediate;
                 break;
-            case Intermediate:
-                generatedWord = words[1].intermediate[Math.floor(Math.random() * words[1].intermediate.length)];
+            case DIFFICULTY.Intermediate:
+                nextLevel = DIFFICULTY.Hard;
                 break;
-            case Hard:
-                generatedWord = words[2].hard[Math.floor(Math.random() * words[2].hard.length)];
-                break;
-            case WorldClass:
-                generatedWord = words[3].worldClass[Math.floor(Math.random() * words[3].worldClass.length)];
+            case DIFFICULTY.Hard:
+                nextLevel = DIFFICULTY.WorldClass;
                 break;
             default:
                 break;
         }
-        return generatedWord;
-    }, []);
 
-    const getUniqueRandomIndexes = useCallback((amount: number, wordLength: number) => {
-        let randomIndexes = [];
-
-        while (randomIndexes.length < amount) {
-            const randIndex = Math.floor(Math.random() * wordLength);
-            if (randomIndexes.indexOf(randIndex) === -1) randomIndexes.push(randIndex);
-        }
-
-        return randomIndexes;
-    }, []);
+        return nextLevel;
+    }, [difficulty]);
 
     const renderWord = useCallback(() => {
         const content = transformedWord.split('').map((char, index) => {
@@ -140,7 +146,7 @@ const GamePlayScreen: FunctionComponent = () => {
             <Typography>Difficulty: {difficulty}</Typography>
             <Typography>Life Points: {lifePoints}</Typography>
             <Typography>Score: {score}</Typography>
-            <Countdown time={count} style={{ marginTop: 12 }} />
+            <Countdown time={seconds} style={{ marginTop: 12 }} />
             <GuessContainer>{renderWord()}</GuessContainer>
             {errorLabel && <Typography style={{ color: COLOR.ERROR }}>Please fill all characters</Typography>}
             <MainButton title="Check The Guess" style={{ width: 160 }} onPress={onGuess} />
