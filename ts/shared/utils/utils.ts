@@ -1,12 +1,12 @@
 import {DIFFICULTY} from '../constants/contants';
 const words = require('../../../vocabulary.json');
 
-export const replaceChar = (str: string, char: string, index: number) => {
-    let newStringArray = str.split("");
-    newStringArray[index] = char;
-    let newString = newStringArray.join("");
+export const replaceLetterByIndex = (originStr: string, index: number, letter: string) => {
+    return originStr.substr(0, index) + letter + originStr.substr(index + 1);
+};
 
-    return newString;
+export const removeSpaces = (originStr: string) => {
+    return originStr.replace(/\s/g, '')
 };
 
 export const getWordByDifficulty = (difficulty: DIFFICULTY) => {

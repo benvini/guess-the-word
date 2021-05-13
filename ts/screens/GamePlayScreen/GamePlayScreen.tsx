@@ -1,25 +1,24 @@
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
+import { Input } from 'react-native-elements';
+import { isEmpty } from 'lodash';
 
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 import Countdown from './components/Countdown';
 import { DIFFICULTY } from '../../shared/constants/contants';
-import { replaceChar, getWordByDifficulty, getUniqueRandomIndexes } from '../../shared/utils/utils';
+import { getWordByDifficulty, getUniqueRandomIndexes, replaceLetterByIndex, removeSpaces } from '../../shared/utils/utils';
 import COLOR from '../../styles/Color';
 
 const GuessContainer = styled.View`
     flex-direction: row;
-    margin-bottom: 12px;
 `
 
-const StyledInput = styled.TextInput`
-    padding: 0px;
+const StyledInput = styled.View`
     border-width: 0;
     width: 36px;
-    margin-bottom: 8px;
-    margin-top: 16px;
+    margin-top: 2px;
     margin-right: 6px;
     color: black;
     text-align: center;
@@ -27,62 +26,97 @@ const StyledInput = styled.TextInput`
 `
 
 const GamePlayScreen: FunctionComponent = () => {
-    const [seconds, setSeconds] = useState(5);
+    const [seconds, setSeconds] = useState(10);
     const [difficulty, setDifficulty] = useState(DIFFICULTY.Easy);
     const [lifePoints, setLifePoints] = useState(3);
     const [score, setScore] = useState(0);
     const [visitedWords, setVisitedWords] = useState([]);
     const [generatedWord, setGeneratedWord] = useState('');
     const [transformedWord, setTransformedWord] = useState('');
-    const [errorLabel, setErrorLabel] = useState(false);
+    const [missingIndexes, setMissingIndexes] = useState<number[]>([]);
+    const [isGameEnded, setIsGameEnded] = useState(false);
+    const [answerIndicator, setAnswerIndicator] = useState({
+        visible: false,
+        color: COLOR.SUCCESS,
+        message: ''
+    });
     const navigation = useNavigation();
+    const secoreRef = useRef(score);
+    secoreRef.current = score;
 
-    const onTextChanges = useCallback((text, index) => {
-        setTransformedWord(transformedWord => replaceChar(transformedWord, text, index));
-    }, []);
-
-    useEffect(() => {
+    useEffect(() => { // generate word on initial render
+        setLifePoints(3);
         generateNewWord();
     }, []);
 
-    useEffect(() => {
+    useEffect(() => { // hide answer indicator in 3 seconds
+        const timer = setTimeout(() => {
+            setAnswerIndicator({
+                visible: false,
+                color: COLOR.SUCCESS,
+                message: ''
+            });
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, [answerIndicator]);
+
+    useEffect(() => { // moving next level or moving to the end game screen when countdown gets 0
         if (seconds === 0) {
             const nextLevel = getNextDifficulty();
-            if (nextLevel !== DIFFICULTY.Easy) {
+            if (nextLevel !== DIFFICULTY.Easy) { // if game continues
                 setDifficulty(nextLevel);
-                setSeconds(5);
+                setSeconds(10);
             }
-            else {
-                cleanupGameConfig();
-                navigation.navigate('Game Over', { score });
+            else { // game ended
+                setIsGameEnded(true);
+                setTransformedWord('');
+                const timer = setTimeout(() => {
+                    navigation.navigate('Game Over', { score: secoreRef.current });
+                }, 3000);
+                return () => clearTimeout(timer);
             }
         }
-    }, [seconds, score]);
+    }, [seconds]);
 
-    useEffect(() => {
-        const timer = startCountdown();
+    useEffect(() => { // starts the countdown when new level reached
+        generateNewWord();
+        const countdownTimer = startCountdown();
+        setAnswerIndicator({
+            visible: false,
+            color: COLOR.SUCCESS,
+            message: ''
+        });
 
         return () => {
-            clearInterval(timer);
+            clearInterval(countdownTimer);
         }
     }, [difficulty]);
 
-    useEffect(() => {
+    useEffect(() => { // potential moving to the end game screen when losing all life points
         if (lifePoints === 0) {
-            cleanupGameConfig();
-            navigation.navigate('Game Over', { score });
+            setIsGameEnded(true);
+            setTransformedWord('');
+            const timer = setTimeout(() => {
+                navigation.navigate('Game Over', { score: secoreRef.current });
+            }, 3000);
+            return () => clearTimeout(timer);
         }
-        else {
-            setErrorLabel(false);
-            generateNewWord();
-        }
-    }, [lifePoints, difficulty, score]);
+    }, [lifePoints]);
+
+    const onTextChanges = useCallback((text, index) => {
+        const letter = isEmpty(text) ? ' ' : text; // check if text is '' or ' ', assign ' '
+        const updatedWord = replaceLetterByIndex(transformedWord, index, letter);
+        setTransformedWord(updatedWord);
+    }, [replaceLetterByIndex, transformedWord]);
 
     const generateNewWord = useCallback(() => {
-        const generatedWord = getWordByDifficulty(difficulty);
+        const generatedWord = getWordByDifficulty(difficulty).toUpperCase();
         setGeneratedWord(generatedWord);
         const wordLength = generatedWord.length;
-        const randomIndexes = wordLength < 5 ? getUniqueRandomIndexes(1, wordLength) : getUniqueRandomIndexes(2, wordLength);
+        const randomIndexes = wordLength < 10 ? getUniqueRandomIndexes(1, wordLength) : getUniqueRandomIndexes(2, wordLength);
+
+        setMissingIndexes(randomIndexes);
         const transformedWord = generatedWord.split('').map((char, index) => {
             if (randomIndexes.includes(index)) {
                 return ' ';
@@ -91,14 +125,6 @@ const GamePlayScreen: FunctionComponent = () => {
         }).join('');
         setTransformedWord(transformedWord);
     }, [difficulty]);
-
-    const cleanupGameConfig = useCallback(() => {
-        setSeconds(5);
-        setDifficulty(DIFFICULTY.Easy)
-        setLifePoints(3);
-        setScore(0);
-        setErrorLabel(false);
-    }, []);
 
     const startCountdown = useCallback(() => {
         const timer = setInterval(() => {
@@ -129,38 +155,52 @@ const GamePlayScreen: FunctionComponent = () => {
 
     const renderWord = useCallback(() => {
         const content = transformedWord.split('').map((char, index) => {
-            if (char === ' ') {
-                return (<StyledInput key={index} style={{ borderBottomWidth: 2 }} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} />);
+            const letter = isEmpty(char.trim()) ? '' : char;
+            if (missingIndexes.includes(index)) {
+                return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ borderBottomWidth: 2 }} value={letter} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
             }
-            return (<StyledInput key={index} editable={false} value={char.toUpperCase()} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} />);
+            return (<StyledInput key={`${transformedWord} ${index}`}><Input editable={false} value={letter} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
         });
+
         return content;
-    }, [transformedWord]);
+    }, [transformedWord, missingIndexes]);
 
     const onGuess = useCallback(() => {
-        if (transformedWord.trim().length === generatedWord.length) {
-            setErrorLabel(false);
-            if (transformedWord === generatedWord) {
-                setScore(score => score + 1);
-            }
-            else {
-                setLifePoints(lifePoints => lifePoints - 1);
-            }
+        if (transformedWord === generatedWord) {
+            setScore(score => score + 1);
+            setAnswerIndicator({
+                visible: true,
+                color: COLOR.SUCCESS,
+                message: 'Correct!'
+            })
+            generateNewWord();
         }
         else {
-            setErrorLabel(true);
+            setLifePoints(lifePoints => lifePoints - 1);
+            setAnswerIndicator({
+                visible: true,
+                color: COLOR.ERROR,
+                message: `Wrong answer! correct word: ${generatedWord}`
+            })
+            if (lifePoints - 1 > 0) {
+                generateNewWord();
+            }
         }
-    }, [transformedWord, generatedWord]);
+    }, [transformedWord, generatedWord, lifePoints]);
 
     return (
         <Screen>
-            <Typography>Difficulty: {difficulty}</Typography>
-            <Typography>Life Points: {lifePoints}</Typography>
-            <Typography>Score: {score}</Typography>
-            <Countdown time={seconds} style={{ marginTop: 12 }} />
-            <GuessContainer>{renderWord()}</GuessContainer>
-            {errorLabel && <Typography style={{ color: COLOR.ERROR }}>Please fill all characters</Typography>}
-            <MainButton title="Check The Guess" style={{ width: 160 }} onPress={onGuess} />
+            <Typography style={{margin: 4}}>Score: {score}</Typography>
+            {!isGameEnded &&
+                <>
+                    <Typography style={{margin: 4}}>Difficulty: {difficulty}</Typography>
+                    <Typography style={{margin: 4}}>Life Points: {lifePoints}</Typography>
+                    <Countdown time={seconds} style={{ marginTop: 12 }} />
+                    <GuessContainer>{renderWord()}</GuessContainer>
+                    <MainButton title="Check The Guess" disabled={removeSpaces(transformedWord).length !== generatedWord.length} style={{ width: 160 }} onPress={onGuess} />
+                </>
+            }
+            {answerIndicator.visible && <Typography style={{ color: answerIndicator.color }}>{answerIndicator.message}</Typography>}
         </Screen>
     )
 };

@@ -1,15 +1,9 @@
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components/native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import {get} from 'lodash';
 
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
-
-const Button = styled.TouchableOpacity`
-    padding: 8px;
-    border-radius: 4px;
-`;
 
 const GameOverScreen: FunctionComponent = () => {
   const [score, setScore] = useState(4);
@@ -35,11 +29,10 @@ const GameOverScreen: FunctionComponent = () => {
   
   return (
     <Screen>
-      <Typography>Game Over Screen</Typography>
-      <Typography>Your Score: {score}</Typography>
-      <Typography>High Score:</Typography>
-      <Typography>Form</Typography>
-      <MainButton title="Leaderboards"></MainButton>
+      <Typography style={{margin: 4}}>Your Score: {score}</Typography>
+      <Typography style={{margin: 4}}>High Score:</Typography>
+      <Typography style={{margin: 4}}>Form</Typography>
+      <MainButton title="Leaderboards" style={{ width: 140 }}></MainButton>
       <MainButton title="New Game" onPress={onNewGame}></MainButton>
       <MainButton title="Main Menu" onPress={onMainMenu}></MainButton>
     </Screen>

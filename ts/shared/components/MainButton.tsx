@@ -6,7 +6,7 @@ import Typography from './Typography';
 import COLOR from '../../styles/Color';
 
 const Container = styled.View`
-    margin: 10px;
+    margin: 8px;
 `
 
 const StyledButton = styled.TouchableOpacity`
