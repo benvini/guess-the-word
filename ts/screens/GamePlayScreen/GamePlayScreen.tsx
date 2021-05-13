@@ -53,9 +53,9 @@ const GamePlayScreen: FunctionComponent = () => {
             initialGameConfig();
             generateNewWord();
         });
-    
+
         return unsubscribe;
-      }, [navigation]);
+    }, [navigation]);
 
     useEffect(() => { // hide answer indicator in 3 seconds
         const timer = setTimeout(() => {
@@ -139,7 +139,7 @@ const GamePlayScreen: FunctionComponent = () => {
         const generatedWord = getWordByDifficulty(difficulty).toUpperCase();
         setGeneratedWord(generatedWord);
         const wordLength = generatedWord.length;
-        const randomIndexes = wordLength < 5 ? getUniqueRandomIndexes(1, wordLength) : getUniqueRandomIndexes(2, wordLength);
+        const randomIndexes = getUniqueRandomIndexes(1, wordLength);
 
         setMissingIndexes(randomIndexes);
         const transformedWord = generatedWord.split('').map((char, index) => {
