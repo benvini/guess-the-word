@@ -139,7 +139,7 @@ const GamePlayScreen: FunctionComponent = () => {
         const generatedWord = getWordByDifficulty(difficulty).toUpperCase();
         setGeneratedWord(generatedWord);
         const wordLength = generatedWord.length;
-        const randomIndexes = wordLength < 10 ? getUniqueRandomIndexes(1, wordLength) : getUniqueRandomIndexes(2, wordLength);
+        const randomIndexes = wordLength < 5 ? getUniqueRandomIndexes(1, wordLength) : getUniqueRandomIndexes(2, wordLength);
 
         setMissingIndexes(randomIndexes);
         const transformedWord = generatedWord.split('').map((char, index) => {
