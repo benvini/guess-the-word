@@ -182,9 +182,9 @@ const GamePlayScreen: FunctionComponent = () => {
         const content = transformedWord.split('').map((char, index) => {
             const letter = isEmpty(char.trim()) ? '' : char;
             if (missingIndexes.includes(index)) {
-                return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ borderBottomWidth: 2 }} value={letter} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
+                return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ borderBottomWidth: 2 }} value={letter} autoFocus onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
             }
-            return (<StyledInput key={`${transformedWord} ${index}`}><Input editable={false} value={letter} onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
+            return (<StyledInput key={`${transformedWord} ${index}`}><Input editable={false} value={letter} autoFocus onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
         });
 
         return content;
