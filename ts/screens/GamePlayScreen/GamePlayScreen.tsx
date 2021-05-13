@@ -45,9 +45,17 @@ const GamePlayScreen: FunctionComponent = () => {
     secoreRef.current = score;
 
     useEffect(() => { // generate word on initial render
-        setLifePoints(3);
         generateNewWord();
     }, []);
+
+    useEffect(() => { // setup initial game config
+        const unsubscribe = navigation.addListener('focus', () => {
+            initialGameConfig();
+            generateNewWord();
+        });
+    
+        return unsubscribe;
+      }, [navigation]);
 
     useEffect(() => { // hide answer indicator in 3 seconds
         const timer = setTimeout(() => {
@@ -103,6 +111,23 @@ const GamePlayScreen: FunctionComponent = () => {
             return () => clearTimeout(timer);
         }
     }, [lifePoints]);
+
+    const initialGameConfig = useCallback(() => {
+        setIsGameEnded(false);
+        setSeconds(10);
+        setDifficulty(DIFFICULTY.Easy)
+        setLifePoints(3);
+        setScore(0);
+        setGeneratedWord('');
+        setTransformedWord('');
+        setVisitedWords([]);
+        setMissingIndexes([]);
+        setAnswerIndicator({
+            visible: false,
+            color: COLOR.SUCCESS,
+            message: ''
+        });
+    }, []);
 
     const onTextChanges = useCallback((text, index) => {
         const letter = isEmpty(text) ? ' ' : text; // check if text is '' or ' ', assign ' '
@@ -190,11 +215,11 @@ const GamePlayScreen: FunctionComponent = () => {
 
     return (
         <Screen>
-            <Typography style={{margin: 4}}>Score: {score}</Typography>
+            <Typography style={{ margin: 4 }}>Score: {score}</Typography>
             {!isGameEnded &&
                 <>
-                    <Typography style={{margin: 4}}>Difficulty: {difficulty}</Typography>
-                    <Typography style={{margin: 4}}>Life Points: {lifePoints}</Typography>
+                    <Typography style={{ margin: 4 }}>Difficulty: {difficulty}</Typography>
+                    <Typography style={{ margin: 4 }}>Life Points: {lifePoints}</Typography>
                     <Countdown time={seconds} style={{ marginTop: 12 }} />
                     <GuessContainer>{renderWord()}</GuessContainer>
                     <MainButton title="Check The Guess" disabled={removeSpaces(transformedWord).length !== generatedWord.length} style={{ width: 160 }} onPress={onGuess} />
