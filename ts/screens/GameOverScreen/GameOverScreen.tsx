@@ -1,12 +1,14 @@
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { get } from 'lodash';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components/native';
 import { Formik } from 'formik'
 import { Input } from 'react-native-elements';
 import * as yup from 'yup'
 
 import { Screen, Typography } from '../../shared/components';
+import { submitScore } from '../../store/actions/guess';
 import COLOR from '../../styles/Color';
 import MainButton from '../../shared/components/MainButton';
 
@@ -41,24 +43,33 @@ const formValidationSchema = yup.object().shape({
 
 const GameOverScreen: FunctionComponent = () => {
   const [score, setScore] = useState(4);
+  const dispatch = useDispatch();
   const route = useRoute();
   const navigation = useNavigation();
 
   useEffect(() => {
     const userScore = get(route.params, 'score', -1);
-    setScore(userScore)
+    setScore(userScore);
 
     if (userScore === -1) {
-      console.error('Bad input. Could not get score.')
+      console.error('Bad input. Could not get score.');
     }
   }, []);
 
   const onNewGame = useCallback(() => {
-    navigation.navigate('Game Play')
+    navigation.navigate('Game Play');
   }, []);
 
   const onMainMenu = useCallback(() => {
-    navigation.navigate('Main Menu')
+    navigation.navigate('Main Menu');
+  }, []);
+
+  const onLeaderboards = useCallback(() => {
+    navigation.navigate('Leaderboards');
+  }, []);
+
+  const onSubmit = useCallback((highScore) => {
+    dispatch(submitScore(highScore))
   }, []);
 
   return (
@@ -69,7 +80,7 @@ const GameOverScreen: FunctionComponent = () => {
         <Formik
           validationSchema={formValidationSchema}
           initialValues={{ name: '', phone: '' }}
-          onSubmit={values => console.log(values)}
+          onSubmit={values => onSubmit(values)}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, isValid }) => (
             <>
@@ -103,7 +114,7 @@ const GameOverScreen: FunctionComponent = () => {
           )}
         </Formik>
       </FormContainer>
-      <MainButton title="Leaderboards" style={{ width: 140 }}></MainButton>
+      <MainButton title="Leaderboards" style={{ width: 140 }} onPress={onLeaderboards}></MainButton>
       <MainButton title="New Game" onPress={onNewGame}></MainButton>
       <MainButton title="Main Menu" onPress={onMainMenu}></MainButton>
     </Screen>

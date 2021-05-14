@@ -64,6 +64,9 @@ const GameNavigator = () => {
             <GameStackNavigator.Screen
                 name="Leaderboards"
                 component={LeaderboardsScreen}
+                options={() => ({
+                    headerLeft: () => null,
+                  })}
             />
         </GameStackNavigator.Navigator>
     )
