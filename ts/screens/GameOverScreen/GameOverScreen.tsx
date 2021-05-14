@@ -84,7 +84,7 @@ const GameOverScreen: FunctionComponent = () => {
               />
               </StyledInput>
               {errors.name &&
-                <Typography style={{ fontSize: 10, color: 'red' }}>{errors.name}</Typography>
+                <Typography style={{ fontSize: 14, color: 'red' }}>{errors.name}</Typography>
               }
               <StyledInput><Input
                 key="phone"
@@ -96,7 +96,7 @@ const GameOverScreen: FunctionComponent = () => {
               />
               </StyledInput>
               {errors.phone &&
-                <Typography style={{ fontSize: 10, color: 'red' }}>{errors.phone}</Typography>
+                <Typography style={{ fontSize: 14, color: 'red' }}>{errors.phone}</Typography>
               }
               <MainButton onPress={handleSubmit} title="Submit" disabled={!isValid} style={{ backgroundColor: COLOR.SUCCESS, marginTop: 12 }} />
             </>
