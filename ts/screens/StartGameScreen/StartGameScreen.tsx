@@ -1,8 +1,11 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { orderBy } from 'lodash';
 
 import { Screen, Typography } from '../../shared/components';
+import { HighScoreState } from '../../types';
 import MainButton from '../../shared/components/MainButton';
 
 const TitleContainer = styled.View`
@@ -15,6 +18,8 @@ const ButtonsContainer = styled.View`
 
 const StartGameScreen: FunctionComponent = () => {
     const navigation = useNavigation();
+    const highScores = useSelector((state: HighScoreState) => state.highScores);
+    const sortedScores = orderBy(highScores, ['score', 'name'], ['desc'])
     const onStartGame = useCallback(() => {
         navigation.navigate('Game Play');
     }, []);
@@ -27,10 +32,14 @@ const StartGameScreen: FunctionComponent = () => {
                 <Typography>Welcome to the Guess the word game!</Typography>
             </TitleContainer>
             <ButtonsContainer>
-                <MainButton onPress={onStartGame} title="Start Game"/>
-                <MainButton onPress={onLeaderboards} title="Leaderboards" style={{ width: 140 }}/>
+                <MainButton onPress={onStartGame} title="Start Game" />
+                <MainButton onPress={onLeaderboards} title="Leaderboards" style={{ width: 140 }} />
             </ButtonsContainer>
-            <Typography>Your high score:</Typography>
+            {
+                sortedScores && sortedScores.length ?
+                    <Typography>High score: {sortedScores[0].score}</Typography>
+                    : <Typography>High score: 0</Typography>
+            }
         </Screen>
     )
 };
