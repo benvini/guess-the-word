@@ -17,12 +17,10 @@ const GuessReducer = (
     }
 };
 
-const submitScore = (state: HighScoreState, action: HighScoreAction) => {
-    console.log('action', action.highScore);
-    
+const submitScore = (state: HighScoreState, action: HighScoreAction) => {        
     return {
         ...state,
-        highScores: [...state.highScores, action.highScore]
+        highScores: [...state.highScores, {...action.user, score: action.score}]
     }
 };
 

@@ -1,11 +1,10 @@
 import { SUBMIT_SCORE } from './actionTypes';
-import { HighScore } from '../../types';
+import { User } from '../../types';
 
-export const submitScore = (highScore: HighScore) => {
-    console.log('highScore', highScore);
-    
+export const submitScore = (user: User, score: number) => {        
     return {
         type: SUBMIT_SCORE,
-        highScore
+        user,
+        score
     }
 };

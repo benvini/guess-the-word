@@ -1,5 +1,10 @@
 import {AnyAction} from 'redux';
 
+export interface User {
+    name: string,
+    phone: number
+}
+
 export interface HighScore {
     name: string,
     phone: number,
@@ -7,8 +12,9 @@ export interface HighScore {
 }
 
 export interface HighScoreAction extends AnyAction {
-    scores: HighScore,
     type: string
+    user: User,
+    score: number
 }
 
 export interface HighScoreState {
