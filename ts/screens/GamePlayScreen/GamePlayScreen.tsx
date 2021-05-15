@@ -17,12 +17,9 @@ const GuessContainer = styled.View`
 
 const StyledInput = styled.View`
     border-width: 0;
-    width: 36px;
+    width: 44px;
     margin-top: 2px;
     margin-right: 6px;
-    color: black;
-    text-align: center;
-    font-size: 18px;
 `
 
 const GamePlayScreen: FunctionComponent = () => {
@@ -182,9 +179,9 @@ const GamePlayScreen: FunctionComponent = () => {
         const content = transformedWord.split('').map((char, index) => {
             const letter = isEmpty(char.trim()) ? '' : char;
             if (missingIndexes.includes(index)) {
-                return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ borderBottomWidth: 2 }} value={letter} autoFocus onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
+                return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ borderBottomWidth: 2, color: 'black', textAlign: 'center', fontSize: 20 }} value={letter} autoFocus onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
             }
-            return (<StyledInput key={`${transformedWord} ${index}`}><Input editable={false} value={letter} autoFocus onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
+            return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ color: 'black', textAlign: 'center', fontSize: 20 }} editable={false} value={letter} autoFocus onChangeText={(text) => onTextChanges(text.toUpperCase(), index)} maxLength={1} /></StyledInput>);
         });
 
         return content;
@@ -215,17 +212,17 @@ const GamePlayScreen: FunctionComponent = () => {
 
     return (
         <Screen>
-            <Typography style={{ margin: 4 }}>Score: {score}</Typography>
-            {!isGameEnded &&
-                <>
-                    <Typography style={{ margin: 4 }}>Difficulty: {difficulty}</Typography>
-                    <Typography style={{ margin: 4 }}>Life Points: {lifePoints}</Typography>
-                    <Countdown time={seconds} style={{ marginTop: 12 }} />
-                    <GuessContainer>{renderWord()}</GuessContainer>
-                    <MainButton title="Check The Guess" disabled={removeSpaces(transformedWord).length !== generatedWord.length} style={{ width: 160 }} onPress={onGuess} />
-                </>
-            }
-            {answerIndicator.visible && <Typography style={{ color: answerIndicator.color }}>{answerIndicator.message}</Typography>}
+                <Typography style={{ margin: 4 }}>Score: {score}</Typography>
+                {!isGameEnded &&
+                    <>
+                        <Typography style={{ margin: 4 }}>Difficulty: {difficulty}</Typography>
+                        <Typography style={{ margin: 4 }}>Life Points: {lifePoints}</Typography>
+                        <Countdown time={seconds} style={{ marginTop: 12 }} />
+                        <GuessContainer>{renderWord()}</GuessContainer>
+                        <MainButton title="Check The Guess" disabled={removeSpaces(transformedWord).length !== generatedWord.length} style={{ width: 160 }} onPress={onGuess} />
+                    </>
+                }
+                {answerIndicator.visible && <Typography style={{ color: answerIndicator.color }}>{answerIndicator.message}</Typography>}
         </Screen>
     )
 };
