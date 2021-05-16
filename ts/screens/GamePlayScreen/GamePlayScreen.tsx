@@ -10,10 +10,10 @@ import Countdown from './components/Countdown';
 import { DIFFICULTY } from '../../shared/constants/contants';
 import { getWordByDifficulty, getUniqueRandomIndexes, replaceLetterByIndex, removeSpaces } from '../../shared/utils/utils';
 import COLOR from '../../styles/Color';
-import { Keyboard } from 'react-native';
+import { Keyboard, Platform } from 'react-native';
 
 const GuessContainer = styled.View`
-    flex-direction: row;
+    flex-direction: ${Platform.OS === 'ios' ? 'row' : 'row-reverse'};
 `
 
 const TouchableWithoutFeedback = styled.TouchableWithoutFeedback``
@@ -182,9 +182,9 @@ const GamePlayScreen: FunctionComponent = () => {
         const content = transformedWord.split('').map((char, index) => {
             const letter = isEmpty(char.trim()) ? '' : char;
             if (missingIndexes.includes(index)) {
-                return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ borderBottomWidth: 2, color: 'black', textAlign: 'center', fontSize: 20 }} autoCapitalize='none' value={letter} autoFocus onChangeText={(text) => onTextChanges(text, index)} maxLength={1} /></StyledInput>);
+                return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ borderBottomWidth: 2, color: 'black', textAlign: 'center', fontSize: 20 }} autoCompleteType='off' autoCapitalize='none' value={letter} autoFocus onChangeText={(text) => onTextChanges(text, index)} maxLength={1} /></StyledInput>);
             }
-            return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ color: 'black', textAlign: 'center', fontSize: 20 }} editable={false} value={letter} autoCapitalize='none' autoFocus onChangeText={(text) => onTextChanges(text, index)} maxLength={1} /></StyledInput>);
+            return (<StyledInput key={`${transformedWord} ${index}`}><Input style={{ color: 'black', textAlign: 'center', fontSize: 20 }} editable={false} value={letter} autoCompleteType='off' autoCapitalize='none' autoFocus onChangeText={(text) => onTextChanges(text, index)} maxLength={1} /></StyledInput>);
         });
 
         return content;
@@ -215,7 +215,7 @@ const GamePlayScreen: FunctionComponent = () => {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <Screen>
+            <Screen>
                 <Typography style={{ margin: 4 }}>Score: {score}</Typography>
                 {!isGameEnded &&
                     <>
@@ -224,10 +224,10 @@ const GamePlayScreen: FunctionComponent = () => {
                         <Countdown time={seconds} style={{ marginTop: 12 }} />
                         <GuessContainer>{renderWord()}</GuessContainer>
                         <MainButton title="Check The Guess" disabled={removeSpaces(transformedWord).length !== generatedWord.length} style={{ width: 160 }} onPress={onGuess} />
-                </>
-                    }
+                    </>
+                }
                 {answerIndicator.visible && <Typography style={{ color: answerIndicator.color }}>{answerIndicator.message}</Typography>}
-        </Screen>
+            </Screen>
         </TouchableWithoutFeedback>
     )
 };
