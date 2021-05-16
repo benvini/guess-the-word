@@ -11,11 +11,14 @@ import { Screen, Typography } from '../../shared/components';
 import { submitScore } from '../../store/actions/guess';
 import COLOR from '../../styles/Color';
 import MainButton from '../../shared/components/MainButton';
+import { Keyboard } from 'react-native';
 
 const StyledInput = styled.View`
     width: 200px;
     margin-top: 12px;
 `
+
+const TouchableWithoutFeedback = styled.TouchableWithoutFeedback``
 
 const FormContainer = styled.View`
     width: 80%;
@@ -70,6 +73,7 @@ const GameOverScreen: FunctionComponent = () => {
   }, []);
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <Screen>
       {!isSubmitForm &&
         <>
@@ -126,6 +130,7 @@ const GameOverScreen: FunctionComponent = () => {
       <MainButton title="New Game" onPress={onNewGame}></MainButton>
       <MainButton title="Main Menu" onPress={onMainMenu}></MainButton>
     </Screen>
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -10,10 +10,13 @@ import Countdown from './components/Countdown';
 import { DIFFICULTY } from '../../shared/constants/contants';
 import { getWordByDifficulty, getUniqueRandomIndexes, replaceLetterByIndex, removeSpaces } from '../../shared/utils/utils';
 import COLOR from '../../styles/Color';
+import { Keyboard } from 'react-native';
 
 const GuessContainer = styled.View`
     flex-direction: row;
 `
+
+const TouchableWithoutFeedback = styled.TouchableWithoutFeedback``
 
 const StyledInput = styled.View`
     border-width: 0;
@@ -211,7 +214,8 @@ const GamePlayScreen: FunctionComponent = () => {
     }, [transformedWord, generatedWord, lifePoints]);
 
     return (
-        <Screen>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <Screen>
                 <Typography style={{ margin: 4 }}>Score: {score}</Typography>
                 {!isGameEnded &&
                     <>
@@ -220,10 +224,11 @@ const GamePlayScreen: FunctionComponent = () => {
                         <Countdown time={seconds} style={{ marginTop: 12 }} />
                         <GuessContainer>{renderWord()}</GuessContainer>
                         <MainButton title="Check The Guess" disabled={removeSpaces(transformedWord).length !== generatedWord.length} style={{ width: 160 }} onPress={onGuess} />
-                    </>
-                }
+                </>
+                    }
                 {answerIndicator.visible && <Typography style={{ color: answerIndicator.color }}>{answerIndicator.message}</Typography>}
         </Screen>
+        </TouchableWithoutFeedback>
     )
 };
 

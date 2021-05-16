@@ -7,12 +7,12 @@ type Props = {
 }
 
 const Container = styled.View`
-    margin-bottom: 30px;
+    margin-bottom: 16px;
 `
 
 const Clock = styled.Text`
     font-weight: bold;
-    font-size: 60px;
+    font-size: 40px;
 `
 
 const Countdown: FunctionComponent<Props> = ({time, style}: Props) => {
