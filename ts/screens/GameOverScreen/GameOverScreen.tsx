@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components/native';
 import { Formik } from 'formik'
-import { Input } from 'react-native-elements';
+import { Input, Card } from 'react-native-elements';
 import * as yup from 'yup'
 
 import { Screen, Typography } from '../../shared/components';
@@ -19,13 +19,9 @@ const StyledInput = styled.View`
 
 const FormContainer = styled.View`
     width: 80%;
-    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
     align-items: center;
     background-color: white;
-    padding: 10px;
-    margin-top: 8px;
-    margin-bottom: 16px;
+    padding: 4px;
 `
 
 const formValidationSchema = yup.object().shape({
@@ -79,45 +75,48 @@ const GameOverScreen: FunctionComponent = () => {
         <>
           <Typography style={{ margin: 4 }}>Your Score: {score}</Typography>
           <Typography style={{ margin: 4 }}>High Score:</Typography>
-          <FormContainer>
-            <Formik
-              validationSchema={formValidationSchema}
-              initialValues={{ name: '', phone: '' }}
-              onSubmit={values => onSubmit(values, score)}
-            >
-              {({ handleChange, handleBlur, handleSubmit, values, errors, isValid }) => (
-                <>
-                  <Typography style={{ fontWeight: 'bold', fontSize: 24, color: COLOR.PRIMARY }}>Submit your score</Typography>
-                  <StyledInput>
-                    <Input
-                      key="name"
-                      placeholder="Name"
-                      onChangeText={handleChange('name')}
-                      onBlur={handleBlur('name')}
-                      autoFocus
-                      value={values.name}
+          <Card containerStyle={{ alignItems: 'center', marginBottom: 4, borderColor: COLOR.PRIMARY, borderWidth: 3}}>
+            <Card.Title style={{ color: COLOR.PRIMARY, fontWeight: 'bold', fontSize: 24 }}>Submit your score</Card.Title>
+            <Card.Divider style={{backgroundColor: COLOR.PRIMARY, height: 2}}/>
+            <FormContainer>
+              <Formik
+                validationSchema={formValidationSchema}
+                initialValues={{ name: '', phone: '' }}
+                onSubmit={values => onSubmit(values, score)}
+              >
+                {({ handleChange, handleBlur, handleSubmit, values, errors, isValid }) => (
+                  <>
+                    <StyledInput>
+                      <Input
+                        key="name"
+                        placeholder="Name"
+                        onChangeText={handleChange('name')}
+                        onBlur={handleBlur('name')}
+                        autoFocus
+                        value={values.name}
+                      />
+                    </StyledInput>
+                    {errors.name &&
+                      <Typography style={{ fontSize: 14, color: 'red' }}>{errors.name}</Typography>
+                    }
+                    <StyledInput><Input
+                      key="phone"
+                      placeholder="Phone"
+                      keyboardType="numeric"
+                      onChangeText={handleChange('phone')}
+                      onBlur={handleBlur('phone')}
+                      value={values.phone}
                     />
-                  </StyledInput>
-                  {errors.name &&
-                    <Typography style={{ fontSize: 14, color: 'red' }}>{errors.name}</Typography>
-                  }
-                  <StyledInput><Input
-                    key="phone"
-                    placeholder="Phone"
-                    keyboardType="numeric"
-                    onChangeText={handleChange('phone')}
-                    onBlur={handleBlur('phone')}
-                    value={values.phone}
-                  />
-                  </StyledInput>
-                  {errors.phone &&
-                    <Typography style={{ fontSize: 14, color: 'red' }}>{errors.phone}</Typography>
-                  }
-                  <MainButton onPress={handleSubmit} title="Submit" disabled={!isValid} style={{ backgroundColor: COLOR.SUCCESS, marginTop: 12 }} />
-                </>
-              )}
-            </Formik>
-          </FormContainer>
+                    </StyledInput>
+                    {errors.phone &&
+                      <Typography style={{ fontSize: 14, color: 'red' }}>{errors.phone}</Typography>
+                    }
+                    <MainButton onPress={handleSubmit} title="Submit" disabled={!isValid} style={{ backgroundColor: COLOR.SUCCESS, marginTop: 12 }} />
+                  </>
+                )}
+              </Formik>
+            </FormContainer>
+          </Card>
         </>
       }
       {
