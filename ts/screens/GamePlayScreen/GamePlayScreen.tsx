@@ -74,7 +74,7 @@ const GamePlayScreen: FunctionComponent = () => {
             const nextLevel = getNextDifficulty();
             if (nextLevel !== DIFFICULTY.Easy) { // if game continues
                 setDifficulty(nextLevel);
-                setSeconds(10);
+                setSeconds(30);
             }
             else { // game ended
                 setIsGameEnded(true);
@@ -114,7 +114,7 @@ const GamePlayScreen: FunctionComponent = () => {
 
     const initialGameConfig = useCallback(() => {
         setIsGameEnded(false);
-        setSeconds(10);
+        setSeconds(30);
         setDifficulty(DIFFICULTY.Easy)
         setLifePoints(3);
         setScore(0);
