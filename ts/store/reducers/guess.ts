@@ -24,7 +24,7 @@ const submitScore = (state: HighScoreState, action: HighScoreAction) => {
     ...state.highScores,
     {...action.user, score: action.score},
   ];
-  const sortedScores = orderBy(updatedScores[0], ['score', 'name'], ['desc']);
+  const sortedScores = orderBy(updatedScores, ['score', 'name'], ['desc']);  
   return {
     ...state,
     highScores: sortedScores,

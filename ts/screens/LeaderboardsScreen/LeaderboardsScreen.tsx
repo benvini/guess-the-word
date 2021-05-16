@@ -40,7 +40,7 @@ const LeaderboardsScreen: FunctionComponent = () => {
     }, []);
 
     const getScoreItemAsArray = useCallback((scoreItem: HighScore) => {
-        const {score, name, phone} = scoreItem;
+        const { score, name, phone } = scoreItem;
         const scoreItemAsArray = [];
         scoreItemAsArray.push(score);
         scoreItemAsArray.push(name);
