@@ -20,7 +20,7 @@ const TouchableWithoutFeedback = styled.TouchableWithoutFeedback``
 
 const StyledInput = styled.View`
     border-width: 0;
-    width: 44px;
+    width: 48px;
     margin-top: 2px;
     margin-right: 6px;
 `
