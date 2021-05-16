@@ -26,7 +26,7 @@ const StyledInput = styled.View`
 `
 
 const GamePlayScreen: FunctionComponent = () => {
-    const [seconds, setSeconds] = useState(10);
+    const [seconds, setSeconds] = useState(30);
     const [difficulty, setDifficulty] = useState(DIFFICULTY.Easy);
     const [lifePoints, setLifePoints] = useState(3);
     const [score, setScore] = useState(0);
