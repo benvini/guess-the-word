@@ -35,7 +35,7 @@ const formValidationSchema = yup.object().shape({
   phone: yup
     .number()
     .integer()
-    .test('len', 'Phone must be exactly 9 characters', (val) => val?.toString().length === 8)
+    .test('len', 'Phone must be exactly 9 characters', (val) => val?.toString().length === 9)
     .required('Phone is required'),
 });
 
