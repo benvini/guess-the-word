@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import { Screen, Typography } from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 import Countdown from './components/Countdown';
-import { DIFFICULTY } from '../../shared/constants/contants';
+import { DIFFICULTY, COUNTDOWN_SECONDS, LIFE_POINTS, ROUTES } from '../../shared/constants/contants';
 import { getWordByDifficulty, getUniqueRandomIndexes, replaceLetterByIndex, removeSpaces } from '../../shared/utils/utils';
 import COLOR from '../../styles/Color';
 import { Keyboard, Platform } from 'react-native';
@@ -26,9 +26,9 @@ const StyledInput = styled.View`
 `
 
 const GamePlayScreen: FunctionComponent = () => {
-    const [seconds, setSeconds] = useState(30);
+    const [seconds, setSeconds] = useState(COUNTDOWN_SECONDS);
     const [difficulty, setDifficulty] = useState(DIFFICULTY.Easy);
-    const [lifePoints, setLifePoints] = useState(3);
+    const [lifePoints, setLifePoints] = useState(LIFE_POINTS);
     const [score, setScore] = useState(0);
     const [visitedWords, setVisitedWords] = useState([]);
     const [generatedWord, setGeneratedWord] = useState('');
@@ -41,6 +41,7 @@ const GamePlayScreen: FunctionComponent = () => {
         message: ''
     });
     const navigation = useNavigation();
+    const { gameOver } = ROUTES;
     const secoreRef = useRef(score);
     secoreRef.current = score;
 
@@ -74,13 +75,13 @@ const GamePlayScreen: FunctionComponent = () => {
             const nextLevel = getNextDifficulty();
             if (nextLevel !== DIFFICULTY.Easy) { // if game continues
                 setDifficulty(nextLevel);
-                setSeconds(30);
+                setSeconds(COUNTDOWN_SECONDS);
             }
             else { // game ended
                 setIsGameEnded(true);
                 setTransformedWord('');
                 const timer = setTimeout(() => {
-                    navigation.navigate('Game Over', { score: secoreRef.current });
+                    navigation.navigate(gameOver, { score: secoreRef.current });
                 }, 3000);
                 return () => clearTimeout(timer);
             }
@@ -106,7 +107,7 @@ const GamePlayScreen: FunctionComponent = () => {
             setIsGameEnded(true);
             setTransformedWord('');
             const timer = setTimeout(() => {
-                navigation.navigate('Game Over', { score: secoreRef.current });
+                navigation.navigate(gameOver, { score: secoreRef.current });
             }, 3000);
             return () => clearTimeout(timer);
         }
@@ -114,9 +115,9 @@ const GamePlayScreen: FunctionComponent = () => {
 
     const initialGameConfig = useCallback(() => {
         setIsGameEnded(false);
-        setSeconds(30);
+        setSeconds(COUNTDOWN_SECONDS);
         setDifficulty(DIFFICULTY.Easy)
-        setLifePoints(3);
+        setLifePoints(LIFE_POINTS);
         setScore(0);
         setGeneratedWord('');
         setTransformedWord('');

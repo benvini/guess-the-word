@@ -12,6 +12,7 @@ import { submitScore } from '../../store/actions/guess';
 import COLOR from '../../styles/Color';
 import MainButton from '../../shared/components/MainButton';
 import { Keyboard } from 'react-native';
+import { ROUTES } from '../../shared/constants/contants';
 
 const StyledInput = styled.View`
     width: 200px;
@@ -45,6 +46,7 @@ const GameOverScreen: FunctionComponent = () => {
   const dispatch = useDispatch();
   const route = useRoute();
   const navigation = useNavigation();
+  const { mainMenu, gamePlay, leaderboards } = ROUTES;
 
   useEffect(() => {
     const userScore = get(route.params, 'score', -1);
@@ -56,15 +58,15 @@ const GameOverScreen: FunctionComponent = () => {
   }, []);
 
   const onNewGame = useCallback(() => {
-    navigation.navigate('Game Play');
+    navigation.navigate(gamePlay);
   }, []);
 
   const onMainMenu = useCallback(() => {
-    navigation.navigate('Main Menu');
+    navigation.navigate(mainMenu);
   }, []);
 
   const onLeaderboards = useCallback(() => {
-    navigation.navigate('Leaderboards');
+    navigation.navigate(leaderboards);
   }, []);
 
   const onSubmit = useCallback((userDetails, score) => {
@@ -74,62 +76,62 @@ const GameOverScreen: FunctionComponent = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <Screen>
-      {!isSubmitForm &&
-        <>
-          <Typography style={{ margin: 4 }}>Your Score: {score}</Typography>
-          <Typography style={{ margin: 4 }}>High Score:</Typography>
-          <Card containerStyle={{ alignItems: 'center', marginBottom: 4, borderColor: COLOR.PRIMARY, borderWidth: 3}}>
-            <Card.Title style={{ color: COLOR.PRIMARY, fontWeight: 'bold', fontSize: 24 }}>Submit your score</Card.Title>
-            <Card.Divider style={{backgroundColor: COLOR.PRIMARY, height: 2}}/>
-            <FormContainer>
-              <Formik
-                validationSchema={formValidationSchema}
-                initialValues={{ name: '', phone: '' }}
-                onSubmit={values => onSubmit(values, score)}
-              >
-                {({ handleChange, handleBlur, handleSubmit, values, errors, isValid }) => (
-                  <>
-                    <StyledInput>
-                      <Input
-                        key="name"
-                        placeholder="Name"
-                        onChangeText={handleChange('name')}
-                        onBlur={handleBlur('name')}
-                        autoFocus
-                        value={values.name}
+      <Screen>
+        {!isSubmitForm &&
+          <>
+            <Typography style={{ margin: 4 }}>Your Score: {score}</Typography>
+            <Typography style={{ margin: 4 }}>High Score:</Typography>
+            <Card containerStyle={{ alignItems: 'center', marginBottom: 4, borderColor: COLOR.PRIMARY, borderWidth: 3 }}>
+              <Card.Title style={{ color: COLOR.PRIMARY, fontWeight: 'bold', fontSize: 24 }}>Submit your score</Card.Title>
+              <Card.Divider style={{ backgroundColor: COLOR.PRIMARY, height: 2 }} />
+              <FormContainer>
+                <Formik
+                  validationSchema={formValidationSchema}
+                  initialValues={{ name: '', phone: '' }}
+                  onSubmit={values => onSubmit(values, score)}
+                >
+                  {({ handleChange, handleBlur, handleSubmit, values, errors, isValid }) => (
+                    <>
+                      <StyledInput>
+                        <Input
+                          key="name"
+                          placeholder="Name"
+                          onChangeText={handleChange('name')}
+                          onBlur={handleBlur('name')}
+                          autoFocus
+                          value={values.name}
+                        />
+                      </StyledInput>
+                      {errors.name &&
+                        <Typography style={{ fontSize: 14, color: 'red' }}>{errors.name}</Typography>
+                      }
+                      <StyledInput><Input
+                        key="phone"
+                        placeholder="Phone"
+                        keyboardType="numeric"
+                        onChangeText={handleChange('phone')}
+                        onBlur={handleBlur('phone')}
+                        value={values.phone}
                       />
-                    </StyledInput>
-                    {errors.name &&
-                      <Typography style={{ fontSize: 14, color: 'red' }}>{errors.name}</Typography>
-                    }
-                    <StyledInput><Input
-                      key="phone"
-                      placeholder="Phone"
-                      keyboardType="numeric"
-                      onChangeText={handleChange('phone')}
-                      onBlur={handleBlur('phone')}
-                      value={values.phone}
-                    />
-                    </StyledInput>
-                    {errors.phone &&
-                      <Typography style={{ fontSize: 14, color: 'red' }}>{errors.phone}</Typography>
-                    }
-                    <MainButton onPress={handleSubmit} title="Submit" disabled={!isValid} style={{ backgroundColor: COLOR.SUCCESS, marginTop: 12 }} />
-                  </>
-                )}
-              </Formik>
-            </FormContainer>
-          </Card>
-        </>
-      }
-      {
-        isSubmitForm && <Typography style={{ marginVertical: 12 }}>Your score has been successfully submitted!</Typography>
-      }
-      <MainButton title="Leaderboards" style={{ width: 140 }} onPress={onLeaderboards}></MainButton>
-      <MainButton title="New Game" onPress={onNewGame}></MainButton>
-      <MainButton title="Main Menu" onPress={onMainMenu}></MainButton>
-    </Screen>
+                      </StyledInput>
+                      {errors.phone &&
+                        <Typography style={{ fontSize: 14, color: 'red' }}>{errors.phone}</Typography>
+                      }
+                      <MainButton onPress={handleSubmit} title="Submit" disabled={!isValid} style={{ backgroundColor: COLOR.SUCCESS, marginTop: 12 }} />
+                    </>
+                  )}
+                </Formik>
+              </FormContainer>
+            </Card>
+          </>
+        }
+        {
+          isSubmitForm && <Typography style={{ marginVertical: 12 }}>Your score has been successfully submitted!</Typography>
+        }
+        <MainButton title="Leaderboards" style={{ width: 140 }} onPress={onLeaderboards}></MainButton>
+        <MainButton title="New Game" onPress={onNewGame}></MainButton>
+        <MainButton title="Main Menu" onPress={onMainMenu}></MainButton>
+      </Screen>
     </TouchableWithoutFeedback>
   );
 };

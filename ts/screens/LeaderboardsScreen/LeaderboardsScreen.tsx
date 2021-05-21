@@ -9,6 +9,7 @@ import { Screen, Typography } from '../../shared/components';
 import { HighScoreState, HighScore } from '../../types';
 import MainButton from '../../shared/components/MainButton';
 import COLOR from '../../styles/Color';
+import {ROUTES} from '../../shared/constants/contants';
 
 const ScrollView = styled.ScrollView`
     margin-top: -1px;   
@@ -30,13 +31,14 @@ const LeaderboardsScreen: FunctionComponent = () => {
     const highScores = useSelector((state: HighScoreState) => state.highScores);
     const sortedScores = orderBy(highScores, ['score', 'name'], ['desc'])
     const navigation = useNavigation();
+    const {mainMenu, gamePlay} = ROUTES;
 
     const onNewGame = useCallback(() => {
-        navigation.navigate('Game Play');
+        navigation.navigate(gamePlay);
     }, []);
 
     const onMainMenu = useCallback(() => {
-        navigation.navigate('Main Menu');
+        navigation.navigate(mainMenu);
     }, []);
 
     const getScoreItemAsArray = useCallback((scoreItem: HighScore) => {

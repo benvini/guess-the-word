@@ -152,6 +152,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('guess_the_word.keystore')
+            storePassword
+            keyAlias
+            keyPassword
+        }
     }
     buildTypes {
         debug {

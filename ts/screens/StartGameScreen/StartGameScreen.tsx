@@ -7,6 +7,7 @@ import { orderBy } from 'lodash';
 import { Screen, Typography } from '../../shared/components';
 import { HighScoreState } from '../../types';
 import MainButton from '../../shared/components/MainButton';
+import { ROUTES } from '../../shared/constants/contants';
 
 const TitleContainer = styled.View`
     margin-top: 8px;
@@ -20,11 +21,12 @@ const StartGameScreen: FunctionComponent = () => {
     const navigation = useNavigation();
     const highScores = useSelector((state: HighScoreState) => state.highScores);
     const sortedScores = orderBy(highScores, ['score', 'name'], ['desc'])
+    const { gamePlay, leaderboards } = ROUTES;
     const onStartGame = useCallback(() => {
-        navigation.navigate('Game Play');
+        navigation.navigate(gamePlay);
     }, []);
     const onLeaderboards = useCallback(() => {
-        navigation.navigate('Leaderboards');
+        navigation.navigate(leaderboards);
     }, []);
     return (
         <Screen>

@@ -6,6 +6,7 @@ import { StartGameScreen } from '../screens/StartGameScreen';
 import { GamePlayScreen } from '../screens/GamePlayScreen';
 import { GameOverScreen } from '../screens/GameOverScreen';
 import { LeaderboardsScreen } from '../screens/LeaderboardsScreen';
+import { ROUTES } from '../shared/constants/contants';
 
 const defaultNavOptions: StackNavigationOptions = {
     headerStyle: {
@@ -44,29 +45,30 @@ const opacityTransition: object = { // animation on navigate the screens
 const GameStackNavigator = createStackNavigator();
 
 const GameNavigator = () => {
+    const { mainMenu, gamePlay, gameOver, leaderboards } = ROUTES;
     return (
         <GameStackNavigator.Navigator screenOptions={{ ...defaultNavOptions, ...opacityTransition }}>
             <GameStackNavigator.Screen
-                name="Main Menu"
+                name={mainMenu}
                 component={StartGameScreen}
             />
             <GameStackNavigator.Screen
-                name="Game Play"
+                name={gamePlay}
                 component={GamePlayScreen}
             />
             <GameStackNavigator.Screen
-                name="Game Over"
+                name={gameOver}
                 component={GameOverScreen}
                 options={() => ({
                     headerLeft: () => null,
-                  })}
+                })}
             />
             <GameStackNavigator.Screen
-                name="Leaderboards"
+                name={leaderboards}
                 component={LeaderboardsScreen}
                 options={() => ({
                     headerLeft: () => null,
-                  })}
+                })}
             />
         </GameStackNavigator.Navigator>
     )
