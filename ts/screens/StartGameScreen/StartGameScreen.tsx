@@ -1,49 +1,58 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, {FC, useCallback} from 'react';
 import styled from 'styled-components/native';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { orderBy } from 'lodash';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
+import {orderBy} from 'lodash';
 
-import { Screen, Typography } from '../../shared/components';
-import { HighScoreState } from '../../types';
+import {Screen, Typography} from '../../shared/components';
+import {HighScoreState} from '../../types';
 import MainButton from '../../shared/components/MainButton';
-import { ROUTES } from '../../shared/constants/contants';
+import {ROUTES} from '../../shared/constants/contants';
+import COLOR from '../../styles/Color';
 
-const TitleContainer = styled.View`
-    margin-top: 8px;
+const StyledTitle = styled(Typography)`
+  font-size: 24px;
+  font-weight: bold;
+  color: ${COLOR.PRIMARY};
+  margin-top: 12px;
+  margin-bottom: 12px;
 `;
 
 const ButtonsContainer = styled.View`
-    flex-direction: row;
-`
+  flex-direction: row;
+`;
 
-const StartGameScreen: FunctionComponent = () => {
-    const navigation = useNavigation();
-    const highScores = useSelector((state: HighScoreState) => state.highScores);
-    const sortedScores = orderBy(highScores, ['score', 'name'], ['desc'])
-    const { gamePlay, leaderboards } = ROUTES;
-    const onStartGame = useCallback(() => {
-        navigation.navigate(gamePlay);
-    }, []);
-    const onLeaderboards = useCallback(() => {
-        navigation.navigate(leaderboards);
-    }, []);
-    return (
-        <Screen>
-            <TitleContainer>
-                <Typography>Welcome to the Guess the word game!</Typography>
-            </TitleContainer>
-            <ButtonsContainer>
-                <MainButton onPress={onStartGame} title="Start Game" />
-                <MainButton onPress={onLeaderboards} title="Leaderboards" style={{ width: 140 }} />
-            </ButtonsContainer>
-            {
-                sortedScores && sortedScores.length ?
-                    <Typography>High score: {sortedScores[0].score}</Typography>
-                    : <Typography>High score: 0</Typography>
-            }
-        </Screen>
-    )
+const StartGameScreen: FC = () => {
+  const navigation = useNavigation();
+  const {t} = useTranslation('startGameScreen');
+  const highScores = useSelector((state: HighScoreState) => state.highScores);
+  const sortedScores = orderBy(highScores, ['score', 'name'], ['desc']);
+  const highScore =
+    sortedScores && sortedScores.length ? sortedScores[0].score : 0;
+  const {gamePlay, leaderboards} = ROUTES;
+  const onStartGame = useCallback(() => {
+    navigation.navigate(gamePlay);
+  }, []);
+  const onLeaderboards = useCallback(() => {
+    navigation.navigate(leaderboards);
+  }, []);
+  return (
+    <Screen>
+      <StyledTitle>{t('welcomeTitle')}</StyledTitle>
+      <ButtonsContainer>
+        <MainButton onPress={onStartGame} title={t('startGame')} />
+        <MainButton
+          onPress={onLeaderboards}
+          title={t('leaderboards')}
+          style={{width: 140}}
+        />
+      </ButtonsContainer>
+      <Typography>
+        {t('highScore')}: {highScore}
+      </Typography>
+    </Screen>
+  );
 };
 
 export default StartGameScreen;

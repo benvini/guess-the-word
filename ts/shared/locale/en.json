@@ -1,0 +1,44 @@
+{
+  "gameOverScreen": {
+    "scoreSubmittedSuccessfully": "Your score has been successfully submitted",
+    "newGame": "NEW GAME",
+    "mainMenu": "MAIN MENU",
+    "yourScore": "Your Score",
+    "highScore": "High Score",
+    "submit": "SUBMIT",
+    "name": "Name",
+    "phone": "Phone",
+    "submitYourScore": "Submit your score",
+    "leaderboards": "LEADERBOARDS",
+    "nameValidationMsg": "Name must be at least",
+    "nameRequired": "Name is required",
+    "characters": "characters",
+    "phoneRequired": "Phone is required",
+    "phoneValidationMsg": "Phone must be exactly 9 characters",
+    "gameEnded": "Game Ended"
+  },
+  "gamePlayScreen": {
+    "checkTheGuess": "CHECK THE GUESS",
+    "difficulty": "Difficulty",
+    "lifePoints": "Life Points",
+    "score": "Score",
+    "wrongGuessMsg": "Wrong guess! corrct guess",
+    "correct": "Correct",
+    "gameTitle": "Guess The Word"
+  },
+  "leaderboardsScreen": {
+    "leaderboards": "Leaderboards",
+    "noDataToShow": "No data to show",
+    "mainMenu": "MAIN MENU",
+    "newGame": "NEW GAME",
+    "score": "Score",
+    "name": "Name",
+    "phone": "Phone"
+  },
+  "startGameScreen": {
+    "leaderboards": "LEADERBOARDS",
+    "startGame": "START GAME",
+    "highScore": "High Score",
+    "welcomeTitle": "Guess The Word"
+  }
+}

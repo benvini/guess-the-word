@@ -1,0 +1,44 @@
+{
+  "gameOverScreen": {
+    "scoreSubmittedSuccessfully": "התוצאה שלך נרשמה בהצלחה",
+    "newGame": "משחק חדש",
+    "mainMenu": "תפריט ראשי",
+    "yourScore": "התוצאה שלך",
+    "highScore": "שיא",
+    "leaderboards": "טבלת שיאים",
+    "submit": "שלח",
+    "name": "שם",
+    "phone": "טלפון",
+    "submitYourScore": "שמור את התוצאה שלך",
+    "nameValidationMsg": "שם חייב להכיל לפחות",
+    "nameRequired": "נדרש שם",
+    "characters": "תווים",
+    "phoneRequired": "נדרש טלפון",
+    "phoneValidationMsg": "טלפון חייב לכלול 9 תווים בדיוק",
+    "gameEnded": "המשחק נגמר"
+  },
+  "gamePlayScreen": {
+    "checkTheGuess": "בדוק את המילה",
+    "difficulty": "רמת קושי",
+    "lifePoints": "נקודות חיים",
+    "score": "תוצאה",
+    "wrongGuessMsg": "ניחוש שגוי! הניחוש הנכון",
+    "correct": "נכון",
+    "gameTitle": "נחש את המילה"
+  },
+  "leaderboardsScreen": {
+    "noDataToShow": "אין שיאים להציג",
+    "leaderboards": "טבלת שיאים",
+    "mainMenu": "תפריט ראשי",
+    "newGame": "משחק חדש",
+    "score": "תוצאה",
+    "name": "שם",
+    "phone": "טלפון"
+  },
+  "startGameScreen": {
+    "leaderboards": "טבלת שיאים",
+    "startGame": "התחל משחק",
+    "highScore": "שיא",
+    "welcomeTitle": "נחש את המילה"
+  }
+}

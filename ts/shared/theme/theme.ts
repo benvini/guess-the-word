@@ -10,12 +10,14 @@ export type Palette = {
 
 export type Theme = {
   isIOS: Boolean;
+  isRTL: Boolean;
   palette: Palette;
 };
 
 const isIOS = Platform.OS === 'ios';
 
-export const loadTheme = (colorSchema: String): Theme => ({
+export const loadTheme = (colorSchema: String, isRTL: Boolean): Theme => ({
   isIOS,
+  isRTL,
   palette: colorSchema === 'light' ? light : dark,
 });
