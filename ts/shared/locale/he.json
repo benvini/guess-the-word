@@ -15,7 +15,8 @@
     "characters": "תווים",
     "phoneRequired": "נדרש טלפון",
     "phoneValidationMsg": "טלפון חייב לכלול 9 תווים בדיוק",
-    "gameEnded": "המשחק נגמר"
+    "gameEnded": "המשחק נגמר",
+    "unableSaveScore": "לא ניתן לשמור את התוצאה"
   },
   "gamePlayScreen": {
     "checkTheGuess": "בדוק את המילה",

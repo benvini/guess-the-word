@@ -12,10 +12,7 @@ import MainButton from '../../shared/components/MainButton';
 import COLOR from '../../styles/Color';
 import {ROUTES} from '../../shared/constants/contants';
 
-const ScrollView = styled.ScrollView`
-  //TODO: fix margin top
-  margin-top: -1px;
-`;
+const ScrollView = styled.ScrollView``;
 
 const StyledTitle = styled(Typography)`
   font-weight: bold;

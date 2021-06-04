@@ -15,7 +15,8 @@
     "characters": "characters",
     "phoneRequired": "Phone is required",
     "phoneValidationMsg": "Phone must be exactly 9 characters",
-    "gameEnded": "Game Ended"
+    "gameEnded": "Game Ended",
+    "unableSaveScore": "Unable save score"
   },
   "gamePlayScreen": {
     "checkTheGuess": "CHECK THE GUESS",

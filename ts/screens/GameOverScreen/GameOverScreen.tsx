@@ -1,6 +1,6 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
-import {useRoute, useNavigation} from '@react-navigation/native';
-import {get, orderBy} from 'lodash';
+import {useRoute, useNavigation, RouteProp} from '@react-navigation/native';
+import {orderBy} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import styled from 'styled-components/native';
@@ -67,8 +67,9 @@ const formValidationSchema = yup.object().shape({
 const GameOverScreen: FC = () => {
   const [score, setScore] = useState(0);
   const [isSubmitForm, setIsSubmitForm] = useState(false);
+  const [error, setError] = useState(false);
   const dispatch = useDispatch();
-  const route = useRoute();
+  const route = useRoute() as RouteProp<{params: {score: string}}, 'params'>;
   const navigation = useNavigation();
   const highScores = useSelector((state: HighScoreState) => state.highScores);
   const sortedScores = orderBy(highScores, ['score', 'name'], ['desc']);
@@ -78,12 +79,11 @@ const GameOverScreen: FC = () => {
   const {mainMenu, gamePlay, leaderboards} = ROUTES;
 
   useEffect(() => {
-    //TODO: display error in case no param
-    const userScore = get(route.params, 'score', -1);
-    setScore(userScore);
-
-    if (userScore === -1) {
-      console.error('Bad input. Could not get score.');
+    const userScore = parseInt(route.params?.score);
+    if (!userScore && userScore !== 0) {
+      setError(true);
+    } else {
+      setScore(userScore);
     }
   }, []);
 
@@ -103,6 +103,14 @@ const GameOverScreen: FC = () => {
     dispatch(submitScore(userDetails, score));
     setIsSubmitForm(true);
   }, []);
+
+  if (error) {
+    return (
+      <Screen>
+        <Typography>{t('unableSaveScore')}</Typography>
+      </Screen>
+    );
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
