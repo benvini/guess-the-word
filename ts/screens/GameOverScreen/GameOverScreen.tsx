@@ -75,7 +75,6 @@ const GameOverScreen: FC = () => {
   const sortedScores = orderBy(highScores, ['score', 'name'], ['desc']);
   const highScore =
     sortedScores && sortedScores.length ? sortedScores[0].score : 0;
-
   const {mainMenu, gamePlay, leaderboards} = ROUTES;
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
+import {Keyboard, Platform} from 'react-native';
 import styled from 'styled-components/native';
 import {Input} from 'react-native-elements';
 import {isEmpty} from 'lodash';
@@ -21,7 +22,6 @@ import {
   removeSpaces,
 } from '../../shared/utils/utils';
 import COLOR from '../../styles/Color';
-import {Keyboard, Platform} from 'react-native';
 
 const GuessContainer = styled.View`
   flex-direction: ${Platform.OS === 'ios' ? 'row' : 'row-reverse'};

@@ -31,12 +31,15 @@ const StartGameScreen: FC = () => {
   const highScore =
     sortedScores && sortedScores.length ? sortedScores[0].score : 0;
   const {gamePlay, leaderboards} = ROUTES;
+
   const onStartGame = useCallback(() => {
     navigation.navigate(gamePlay);
   }, []);
+
   const onLeaderboards = useCallback(() => {
     navigation.navigate(leaderboards);
   }, []);
+
   return (
     <Screen>
       <StyledTitle>{t('welcomeTitle')}</StyledTitle>
