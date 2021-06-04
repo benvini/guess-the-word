@@ -202,10 +202,11 @@ const GameOverScreen: FC = () => {
         )}
         <MainButton
           title={t('leaderboards')}
+          onPress={onLeaderboards}
           style={{width: 140}}
-          onPress={onLeaderboards}></MainButton>
-        <MainButton title={t('newGame')} onPress={onNewGame}></MainButton>
-        <MainButton title={t('mainMenu')} onPress={onMainMenu}></MainButton>
+        />
+        <MainButton title={t('newGame')} onPress={onNewGame} />
+        <MainButton title={t('mainMenu')} onPress={onMainMenu} />
       </Screen>
     </TouchableWithoutFeedback>
   );

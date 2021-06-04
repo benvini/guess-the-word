@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      loadLocale('he');
+      loadLocale('en');
       setIsLoading(false);
     })();
   }, [languageCode]);
