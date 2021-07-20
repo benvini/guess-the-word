@@ -4,11 +4,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import GameNavigator from './GameNavigator';
 
 const AppNavigator = () => {
-    return (
-        <NavigationContainer>
-            <GameNavigator/>
-        </NavigationContainer>
-    )
+  return (
+    <NavigationContainer>
+      <GameNavigator />
+    </NavigationContainer>
+  );
 };
 
 export default AppNavigator;

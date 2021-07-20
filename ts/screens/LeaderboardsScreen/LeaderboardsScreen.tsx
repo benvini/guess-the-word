@@ -11,6 +11,7 @@ import {HighScoreState, HighScore} from '../../types';
 import MainButton from '../../shared/components/MainButton';
 import COLOR from '../../styles/Color';
 import {ROUTES} from '../../shared/constants/contants';
+import {styles} from './styles';
 
 const ScrollView = styled.ScrollView``;
 
@@ -34,23 +35,22 @@ const TableContainer = styled.View`
   padding-top: 30px;
 `;
 
-const {t} = useTranslation('leaderboardsScreen');
-const tableColumns = [t('score'), t('name'), t('phone')];
-const tableWidth = [50, 180, 120];
-
 const LeaderboardsScreen: FC = () => {
   const highScores = useSelector((state: HighScoreState) => state.highScores);
   const sortedScores = orderBy(highScores, ['score', 'name'], ['desc']);
   const navigation = useNavigation();
   const {mainMenu, gamePlay} = ROUTES;
+  const {t} = useTranslation('leaderboardsScreen');
+  const tableColumns = [t('score'), t('name'), t('phone')];
+  const tableWidth = [50, 180, 120];
 
   const onNewGame = useCallback(() => {
     navigation.navigate(gamePlay);
-  }, []);
+  }, [gamePlay, navigation]);
 
   const onMainMenu = useCallback(() => {
     navigation.navigate(mainMenu);
-  }, []);
+  }, [mainMenu, navigation]);
 
   const getScoreItemAsArray = useCallback((scoreItem: HighScore) => {
     const {score, name, phone} = scoreItem;
@@ -74,15 +74,8 @@ const LeaderboardsScreen: FC = () => {
                 <Row
                   data={tableColumns}
                   widthArr={tableWidth}
-                  style={{
-                    height: 50,
-                    backgroundColor: COLOR.PRIMARY,
-                  }}
-                  textStyle={{
-                    textAlign: 'center',
-                    color: 'white',
-                    fontWeight: 'bold',
-                  }}
+                  style={styles.rowHeader}
+                  textStyle={styles.rowHeaderText}
                 />
               </Table>
               <ScrollView>
@@ -92,12 +85,8 @@ const LeaderboardsScreen: FC = () => {
                       key={index}
                       data={getScoreItemAsArray(scoreItem)}
                       widthArr={tableWidth}
-                      style={{height: 40, backgroundColor: COLOR.SECONDARY}}
-                      textStyle={{
-                        textAlign: 'center',
-                        fontWeight: '400',
-                        color: 'white',
-                      }}
+                      style={styles.rowBody}
+                      textStyle={styles.rowBodyText}
                     />
                   ))}
                 </Table>

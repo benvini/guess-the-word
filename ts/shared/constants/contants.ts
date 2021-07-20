@@ -12,3 +12,4 @@ export const ROUTES = {
   gameOver: 'Game Over',
   leaderboards: 'Leaderboards',
 };
+export const RADIX_PARAM = 10;

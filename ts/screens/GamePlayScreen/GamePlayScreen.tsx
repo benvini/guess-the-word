@@ -6,6 +6,7 @@ import styled from 'styled-components/native';
 import {Input} from 'react-native-elements';
 import {isEmpty} from 'lodash';
 
+import {styles} from './styles';
 import {Screen, Typography} from '../../shared/components';
 import MainButton from '../../shared/components/MainButton';
 import Countdown from './components/Countdown';
@@ -87,81 +88,6 @@ const GamePlayScreen: FC = () => {
   const secoreRef = useRef(score);
   secoreRef.current = score;
 
-  useEffect(() => {
-    // generate word on initial render
-    generateNewWord();
-  }, []);
-
-  useEffect(() => {
-    // setup initial game config
-    const unsubscribe = navigation.addListener('focus', () => {
-      initialGameConfig();
-      generateNewWord();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
-  useEffect(() => {
-    // hide guess indicator in 3 seconds
-    const timer = setTimeout(() => {
-      setGuessIndicator({
-        visible: false,
-        correct: true,
-        message: '',
-      });
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [guessIndicator]);
-
-  useEffect(() => {
-    // moving next level or moving to the end game screen when countdown gets 0
-    if (seconds === 0) {
-      const nextLevel = getNextDifficulty();
-      if (nextLevel !== DIFFICULTY.Easy) {
-        // if game continues
-        setDifficulty(nextLevel);
-        setSeconds(COUNTDOWN_SECONDS);
-      } else {
-        // game ended
-        setIsGameEnded(true);
-        setTransformedWord('');
-        const timer = setTimeout(() => {
-          navigation.navigate(gameOver, {score: secoreRef.current});
-        }, 3000);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [seconds]);
-
-  useEffect(() => {
-    // starts the countdown when new level reached
-    generateNewWord();
-    const countdownTimer = startCountdown();
-    setGuessIndicator({
-      visible: false,
-      correct: true,
-      message: '',
-    });
-
-    return () => {
-      clearInterval(countdownTimer);
-    };
-  }, [difficulty]);
-
-  useEffect(() => {
-    // potential moving to the end game screen when losing all life points
-    if (lifePoints === 0) {
-      setIsGameEnded(true);
-      setTransformedWord('');
-      const timer = setTimeout(() => {
-        navigation.navigate(gameOver, {score: secoreRef.current});
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [lifePoints]);
-
   const initialGameConfig = useCallback(() => {
     setIsGameEnded(false);
     setSeconds(COUNTDOWN_SECONDS);
@@ -178,23 +104,14 @@ const GamePlayScreen: FC = () => {
     });
   }, []);
 
-  const onTextChanges = useCallback(
-    (text, index) => {
-      const letter = isEmpty(text) ? ' ' : text; // check if text is '' or ' ', assign ' '
-      const updatedWord = replaceLetterByIndex(transformedWord, index, letter);
-      setTransformedWord(updatedWord);
-    },
-    [replaceLetterByIndex, transformedWord],
-  );
-
   const generateNewWord = useCallback(() => {
-    const generatedWord = getWordByDifficulty(difficulty);
-    setGeneratedWord(generatedWord);
-    const wordLength = generatedWord.length;
+    const newWord = getWordByDifficulty(difficulty);
+    setGeneratedWord(newWord);
+    const wordLength = newWord.length;
     const randomIndexes = getUniqueRandomIndexes(1, wordLength);
 
     setMissingIndexes(randomIndexes);
-    const transformedWord = generatedWord
+    const newTransformedWord = newWord
       .split('')
       .map((char, index) => {
         if (randomIndexes.includes(index)) {
@@ -203,15 +120,36 @@ const GamePlayScreen: FC = () => {
         return char;
       })
       .join('');
-    setTransformedWord(transformedWord);
+    setTransformedWord(newTransformedWord);
   }, [difficulty]);
 
-  const startCountdown = useCallback(() => {
-    const timer = setInterval(() => {
-      setSeconds(prevSeconds => (prevSeconds - 1 >= 0 ? prevSeconds - 1 : 0));
-    }, 1000);
-    return timer;
-  }, []);
+  useEffect(() => {
+    // generate word on initial render
+    generateNewWord();
+  }, [generateNewWord]);
+
+  useEffect(() => {
+    // setup initial game config
+    const unsubscribe = navigation.addListener('focus', () => {
+      initialGameConfig();
+      generateNewWord();
+    });
+
+    return unsubscribe;
+  }, [navigation, generateNewWord, initialGameConfig]);
+
+  useEffect(() => {
+    // hide guess indicator in 3 seconds
+    const timer = setTimeout(() => {
+      setGuessIndicator({
+        visible: false,
+        correct: true,
+        message: '',
+      });
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [guessIndicator]);
 
   const getNextDifficulty = useCallback(() => {
     let nextLevel = DIFFICULTY.Easy;
@@ -233,6 +171,69 @@ const GamePlayScreen: FC = () => {
     return nextLevel;
   }, [difficulty]);
 
+  useEffect(() => {
+    // moving next level or moving to the end game screen when countdown gets 0
+    if (seconds === 0) {
+      const nextLevel = getNextDifficulty();
+      if (nextLevel !== DIFFICULTY.Easy) {
+        // if game continues
+        setDifficulty(nextLevel);
+        setSeconds(COUNTDOWN_SECONDS);
+      } else {
+        // game ended
+        setIsGameEnded(true);
+        setTransformedWord('');
+        const timer = setTimeout(() => {
+          navigation.navigate(gameOver, {score: secoreRef.current});
+        }, 3000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [seconds, gameOver, navigation, getNextDifficulty]);
+
+  const startCountdown = useCallback(() => {
+    const timer = setInterval(() => {
+      setSeconds(prevSeconds => (prevSeconds - 1 >= 0 ? prevSeconds - 1 : 0));
+    }, 1000);
+    return timer;
+  }, []);
+
+  useEffect(() => {
+    // starts the countdown when new level reached
+    generateNewWord();
+    const countdownTimer = startCountdown();
+    setGuessIndicator({
+      visible: false,
+      correct: true,
+      message: '',
+    });
+
+    return () => {
+      clearInterval(countdownTimer);
+    };
+  }, [difficulty, generateNewWord, startCountdown]);
+
+  useEffect(() => {
+    // potential moving to the end game screen when losing all life points
+    if (lifePoints === 0) {
+      setIsGameEnded(true);
+      setTransformedWord('');
+      const timer = setTimeout(() => {
+        navigation.navigate(gameOver, {score: secoreRef.current});
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lifePoints, gameOver, navigation]);
+
+  const onTextChanges = useCallback(
+    (text, index) => {
+      const letter = isEmpty(text) ? ' ' : text; // check if text is '' or ' ', assign ' '
+      const updatedWord = replaceLetterByIndex(transformedWord, index, letter);
+      setTransformedWord(updatedWord);
+    },
+    [transformedWord],
+  );
+
   const renderWord = useCallback(() => {
     const content = transformedWord.split('').map((char, index) => {
       const letter = isEmpty(char.trim()) ? '' : char;
@@ -240,9 +241,7 @@ const GamePlayScreen: FC = () => {
         return (
           <InputContainer key={`${transformedWord} ${index}`}>
             <StyledInput
-              style={{
-                borderBottomWidth: 2,
-              }}
+              style={styles.missingWord}
               autoCompleteType="off"
               autoCapitalize="none"
               value={letter}
@@ -269,11 +268,11 @@ const GamePlayScreen: FC = () => {
     });
 
     return content;
-  }, [transformedWord, missingIndexes]);
+  }, [transformedWord, missingIndexes, onTextChanges]);
 
   const onGuess = useCallback(() => {
     if (transformedWord === generatedWord) {
-      setScore(score => score + 1);
+      setScore(currScore => currScore + 1);
       setGuessIndicator({
         visible: true,
         correct: true,
@@ -281,7 +280,7 @@ const GamePlayScreen: FC = () => {
       });
       generateNewWord();
     } else {
-      setLifePoints(lifePoints => lifePoints - 1);
+      setLifePoints(currLifePoints => currLifePoints - 1);
       setGuessIndicator({
         visible: true,
         correct: false,
@@ -291,7 +290,7 @@ const GamePlayScreen: FC = () => {
         generateNewWord();
       }
     }
-  }, [transformedWord, generatedWord, lifePoints]);
+  }, [transformedWord, generatedWord, lifePoints, generateNewWord, t]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -315,7 +314,7 @@ const GamePlayScreen: FC = () => {
               disabled={
                 removeSpaces(transformedWord).length !== generatedWord.length
               }
-              style={{width: 160}}
+              style={styles.checkTheGuessButton}
               onPress={onGuess}
             />
           </>

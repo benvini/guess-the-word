@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useRoute, useNavigation, RouteProp} from '@react-navigation/native';
 import {orderBy} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
@@ -8,14 +8,14 @@ import {Formik} from 'formik';
 import {Input, Card} from 'react-native-elements';
 import * as yup from 'yup';
 
+import {styles} from './styles';
 import {Screen, Typography} from '../../shared/components';
 import {submitScore} from '../../store/actions/guess';
 import COLOR from '../../styles/Color';
 import MainButton from '../../shared/components/MainButton';
 import {Keyboard} from 'react-native';
-import {ROUTES} from '../../shared/constants/contants';
+import {ROUTES, RADIX_PARAM} from '../../shared/constants/contants';
 import {HighScoreState} from '../../types';
-const {t} = useTranslation('gameOverScreen');
 
 const StyledInput = styled.View`
   width: 200px;
@@ -53,18 +53,7 @@ const FormContainer = styled.View`
   padding: 4px;
 `;
 
-const formValidationSchema = yup.object().shape({
-  name: yup
-    .string()
-    .min(2, ({min}) => `${t('nameValidationMsg')} ${min} ${t('characters')}`)
-    .required(t('nameRequired')),
-  phone: yup
-    .string()
-    .test('len', t('phoneValidationMsg'), val => val?.length === 9)
-    .required(t('phoneRequired')),
-});
-
-const GameOverScreen: FC = () => {
+const GameOverScreen = () => {
   const [score, setScore] = useState(0);
   const [isSubmitForm, setIsSubmitForm] = useState(false);
   const [error, setError] = useState(false);
@@ -76,32 +65,54 @@ const GameOverScreen: FC = () => {
   const highScore =
     sortedScores && sortedScores.length ? sortedScores[0].score : 0;
   const {mainMenu, gamePlay, leaderboards} = ROUTES;
+  const {t} = useTranslation('gameOverScreen');
+
+  const formValidationSchema = useCallback(
+    () =>
+      yup.object().shape({
+        name: yup
+          .string()
+          .min(
+            2,
+            ({min}) => `${t('nameValidationMsg')} ${min} ${t('characters')}`,
+          )
+          .required(t('nameRequired')),
+        phone: yup
+          .string()
+          .test('len', t('phoneValidationMsg'), val => val?.length === 9)
+          .required(t('phoneRequired')),
+      }),
+    [t],
+  );
 
   useEffect(() => {
-    const userScore = parseInt(route.params?.score);
+    const userScore = parseInt(route.params?.score, RADIX_PARAM);
     if (!userScore && userScore !== 0) {
       setError(true);
     } else {
       setScore(userScore);
     }
-  }, []);
+  }, [route.params?.score]);
 
   const onNewGame = useCallback(() => {
     navigation.navigate(gamePlay);
-  }, []);
+  }, [gamePlay, navigation]);
 
   const onMainMenu = useCallback(() => {
     navigation.navigate(mainMenu);
-  }, []);
+  }, [mainMenu, navigation]);
 
   const onLeaderboards = useCallback(() => {
     navigation.navigate(leaderboards);
-  }, []);
+  }, [leaderboards, navigation]);
 
-  const onSubmit = useCallback((userDetails, score) => {
-    dispatch(submitScore(userDetails, score));
-    setIsSubmitForm(true);
-  }, []);
+  const onSubmit = useCallback(
+    (userDetails, newScore) => {
+      dispatch(submitScore(userDetails, newScore));
+      setIsSubmitForm(true);
+    },
+    [dispatch],
+  );
 
   if (error) {
     return (
@@ -123,24 +134,11 @@ const GameOverScreen: FC = () => {
             <StyledText>
               {t('highScore')}: {highScore}
             </StyledText>
-            <Card
-              containerStyle={{
-                alignItems: 'center',
-                marginBottom: 4,
-                borderColor: COLOR.PRIMARY,
-                borderWidth: 3,
-              }}>
-              <Card.Title
-                style={{
-                  color: COLOR.PRIMARY,
-                  fontWeight: 'bold',
-                  fontSize: 24,
-                }}>
+            <Card containerStyle={styles.cardContainer}>
+              <Card.Title style={styles.cardTitle}>
                 {t('submitYourScore')}
               </Card.Title>
-              <Card.Divider
-                style={{backgroundColor: COLOR.PRIMARY, height: 2}}
-              />
+              <Card.Divider style={styles.cardDivider} />
               <FormContainer>
                 <Formik
                   validationSchema={formValidationSchema}
@@ -185,7 +183,7 @@ const GameOverScreen: FC = () => {
                         onPress={handleSubmit}
                         title={t('submit')}
                         disabled={!isValid}
-                        style={{backgroundColor: COLOR.SUCCESS, marginTop: 12}}
+                        style={styles.submitButton}
                       />
                     </>
                   )}
@@ -202,7 +200,7 @@ const GameOverScreen: FC = () => {
         <MainButton
           title={t('leaderboards')}
           onPress={onLeaderboards}
-          style={{width: 140}}
+          style={styles.leaderboardsButton}
         />
         <MainButton title={t('newGame')} onPress={onNewGame} />
         <MainButton title={t('mainMenu')} onPress={onMainMenu} />

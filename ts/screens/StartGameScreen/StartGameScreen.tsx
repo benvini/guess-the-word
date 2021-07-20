@@ -10,6 +10,7 @@ import {HighScoreState} from '../../types';
 import MainButton from '../../shared/components/MainButton';
 import {ROUTES} from '../../shared/constants/contants';
 import COLOR from '../../styles/Color';
+import {styles} from './styles';
 
 const StyledTitle = styled(Typography)`
   font-size: 24px;
@@ -34,11 +35,11 @@ const StartGameScreen: FC = () => {
 
   const onStartGame = useCallback(() => {
     navigation.navigate(gamePlay);
-  }, []);
+  }, [gamePlay, navigation]);
 
   const onLeaderboards = useCallback(() => {
     navigation.navigate(leaderboards);
-  }, []);
+  }, [leaderboards, navigation]);
 
   return (
     <Screen>
@@ -48,7 +49,7 @@ const StartGameScreen: FC = () => {
         <MainButton
           onPress={onLeaderboards}
           title={t('leaderboards')}
-          style={{width: 140}}
+          style={styles.leaderboardsButton}
         />
       </ButtonsContainer>
       <Typography>
